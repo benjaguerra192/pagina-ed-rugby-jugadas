@@ -6,29 +6,29 @@
   <title>Jugadas Rugby 15</title>
   <style>
     :root {
-      --bg: #0f1412;
-      --side: #efe7d8;
-      --card: #fffaf0;
-      --ink: #121817;
-      --muted: #64706b;
-      --field: #2f824d;
-      --field2: #287444;
+      --bg: #101412;
+      --side: #efe6d5;
+      --surface: #fff9ee;
+      --ink: #111815;
+      --muted: #68726d;
+      --field: #2d7c4a;
+      --field-dark: #24663c;
       --line: rgba(255,255,255,.82);
-      --forward: #ffd68f;
-      --back: #a7d7ff;
-      --route: #303a36;
-      --route2: #66706b;
-      --ball: #c26332;
-      --accent: #d99a36;
+      --forwards: #ffd891;
+      --backs: #9ed3ff;
+      --enemy: #111;
+      --route: #202824;
+      --route-soft: rgba(32,40,36,.22);
+      --trail: #f1c15b;
+      --ball: #c46432;
     }
 
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       min-height: 100vh;
       background: var(--bg);
-      color: #f8f1e6;
+      color: white;
       font-family: Arial, Helvetica, sans-serif;
     }
 
@@ -42,58 +42,42 @@
       background: var(--side);
       color: var(--ink);
       padding: 18px;
-      border-right: 1px solid rgba(0,0,0,.18);
       display: grid;
       grid-template-rows: auto auto auto auto 1fr;
       gap: 16px;
+      border-right: 1px solid rgba(0,0,0,.16);
     }
 
     h1, h2, p { margin: 0; }
+    h1 { font-size: 24px; line-height: 1; }
+    h2 { font-size: 34px; line-height: 1; }
 
-    h1 {
-      font-size: 24px;
-      line-height: 1.05;
-    }
-
-    .hint {
+    .muted {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.35;
       margin-top: 6px;
     }
 
-    .stack {
-      display: grid;
-      gap: 9px;
-    }
+    .stack { display: grid; gap: 9px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
 
     button {
       min-height: 42px;
-      border: 1px solid #c9bda9;
+      padding: 10px 12px;
       border-radius: 8px;
-      background: var(--card);
+      border: 1px solid #c9bca6;
+      background: var(--surface);
       color: var(--ink);
       font-weight: 900;
       cursor: pointer;
-      padding: 10px 12px;
     }
 
-    button.active,
-    button[aria-pressed="true"] {
+    .play-btn { text-align: left; font-size: 16px; }
+    button.active, button[aria-pressed="true"] {
       background: var(--ink);
-      color: var(--card);
+      color: var(--surface);
       border-color: var(--ink);
-    }
-
-    .play-btn {
-      text-align: left;
-      font-size: 16px;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
     }
 
     label {
@@ -107,7 +91,19 @@
 
     input[type="range"] {
       width: 100%;
-      accent-color: var(--accent);
+      accent-color: #d99a36;
+    }
+
+    .node-readout {
+      min-height: 34px;
+      display: grid;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.42);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .legend {
@@ -125,9 +121,9 @@
       align-items: center;
     }
 
-    .dot, .ball-icon, .line-icon {
-      display: block;
+    .mark {
       justify-self: center;
+      display: block;
     }
 
     .dot {
@@ -135,25 +131,22 @@
       height: 21px;
       border-radius: 50%;
       border: 2px solid #111;
-      background: var(--back);
+      background: var(--backs);
     }
-
-    .dot.forward { background: var(--forward); }
-    .dot.enemy { background: #111; width: 16px; height: 16px; border: 0; }
-
-    .ball-icon {
+    .dot.forward { background: var(--forwards); }
+    .dot.enemy { width: 15px; height: 15px; border: 0; background: #111; }
+    .ball-mark {
       width: 24px;
       height: 14px;
       border-radius: 50%;
       background: var(--ball);
-      border: 2px solid #f8e9c8;
+      border: 2px solid #ffe8c2;
       transform: rotate(-20deg);
     }
-
-    .line-icon {
+    .line-mark {
       width: 26px;
       height: 4px;
-      border-radius: 999px;
+      border-radius: 99px;
       background: var(--route);
     }
 
@@ -167,19 +160,15 @@
 
     .top {
       display: flex;
-      align-items: end;
       justify-content: space-between;
+      align-items: end;
       gap: 16px;
     }
 
-    h2 {
-      font-size: 34px;
-      line-height: 1;
-    }
-
     .state {
-      font-weight: 900;
       color: #e9f2ee;
+      font-weight: 900;
+      text-align: right;
     }
 
     .board-wrap {
@@ -192,11 +181,11 @@
       width: 100%;
       max-height: 100%;
       aspect-ratio: 1000 / 620;
+      border: 1px solid rgba(255,255,255,.16);
       border-radius: 12px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,.18);
-      background: #1f2b27;
-      box-shadow: 0 16px 44px rgba(0,0,0,.32);
+      background: #1d2824;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
 
     svg {
@@ -204,44 +193,50 @@
       height: 100%;
       display: block;
       background: var(--field);
+      user-select: none;
     }
 
     .bottom {
       display: grid;
-      grid-template-columns: 90px 100px minmax(160px, 1fr) 170px 72px;
+      grid-template-columns: 90px 100px minmax(180px, 1fr) 170px 74px;
       gap: 10px;
       align-items: center;
     }
 
     .time {
-      font-weight: 900;
       color: #e9f2ee;
+      font-weight: 900;
       text-align: right;
     }
 
-    .paper-bg { fill: #f7f2e6; }
+    .paper { fill: #f6f0e3; }
+    .paper-line { fill: none; stroke: rgba(0,0,0,.12); stroke-width: 2; }
     .field-bg { fill: var(--field); }
-    .stripe { fill: var(--field2); opacity: .32; }
+    .stripe { fill: var(--field-dark); opacity: .22; }
     .field-line { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; }
-    .dash { stroke-dasharray: 12 14; }
-    .route { fill: none; stroke: var(--route); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; opacity: .48; }
-    .route.secondary { stroke: var(--route2); stroke-dasharray: 10 10; opacity: .42; }
-    .arrow { fill: var(--route); opacity: .5; }
-    .player circle { stroke: #111; stroke-width: 2.4; }
+    .dash { stroke-dasharray: 13 13; }
+    .route { fill: none; stroke: var(--route); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; opacity: .62; }
+    .route-muted { fill: none; stroke: var(--route); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 10 10; opacity: .32; }
+    .trail { fill: none; stroke: var(--trail); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; opacity: .95; }
+    .arrow { fill: var(--route); opacity: .55; }
+    .node { fill: #fff8e8; stroke: #1b211e; stroke-width: 2; cursor: grab; }
+    .node.selected { fill: var(--trail); stroke-width: 3; }
+    .player circle { stroke: #111; stroke-width: 2.3; }
     .player text { fill: #111; font-size: 14px; font-weight: 900; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-    .forward circle { fill: var(--forward); }
-    .back circle { fill: var(--back); }
+    .forward circle { fill: var(--forwards); }
+    .back circle { fill: var(--backs); }
+    .active-ring { fill: none; stroke: var(--trail); stroke-width: 4; opacity: .95; }
     .enemy { fill: #111; }
-    .ball { fill: var(--ball); stroke: #ffe7bd; stroke-width: 3; }
-    .ruck { fill: rgba(255,255,255,.1); stroke: rgba(255,255,255,.85); stroke-width: 3; }
-    .ruck.preview { fill: rgba(0,0,0,.04); stroke: rgba(0,0,0,.24); }
-    .small-label { fill: rgba(0,0,0,.58); font-size: 16px; font-weight: 900; }
-    .field-label { fill: rgba(255,255,255,.45); font-size: 20px; font-weight: 900; }
+    .ball { fill: var(--ball); stroke: #ffe8c2; stroke-width: 3; }
+    .ruck { fill: rgba(255,255,255,.12); stroke: rgba(255,255,255,.85); stroke-width: 3; }
+    .ruck.preview { fill: rgba(0,0,0,.03); stroke: rgba(0,0,0,.18); }
+    .label { fill: rgba(0,0,0,.58); font-size: 16px; font-weight: 900; }
+    .field-label { fill: rgba(255,255,255,.48); font-size: 20px; font-weight: 900; }
 
-    @media (max-width: 900px) {
+    @media (max-width: 720px) {
       .app { grid-template-columns: 1fr; }
       aside { grid-template-rows: auto; }
-      main { padding: 12px; }
+      main { padding: 12px; min-height: 70vh; }
       .bottom { grid-template-columns: 1fr 1fr; }
       .bottom input, .bottom label, .time { grid-column: 1 / -1; }
     }
@@ -252,29 +247,30 @@
     <aside>
       <div>
         <h1>Jugadas Rugby 15</h1>
-        <p class="hint">Vista limpia. Sin pasos. Sin flechas en animacion.</p>
+        <p class="muted">Simulador táctico. Jugadores estables. Pelota por ruta editable.</p>
       </div>
 
-      <div class="stack" id="plays"></div>
+      <div class="stack" id="playList"></div>
 
       <div class="row">
-        <button id="preview" type="button" aria-pressed="true">Preview</button>
-        <button id="animation" type="button" aria-pressed="false">Animacion</button>
+        <button id="previewBtn" type="button" aria-pressed="true">Preview</button>
+        <button id="simBtn" type="button" aria-pressed="false">Simulación</button>
       </div>
 
       <div class="stack">
-        <button id="editBall" type="button" aria-pressed="false">Mover pelota</button>
-        <label>X pelota <input id="ballX" type="range" min="70" max="930" value="850"></label>
-        <label>Y pelota <input id="ballY" type="range" min="80" max="540" value="160"></label>
-        <button id="resetBall" type="button">Reset pelota</button>
+        <button id="editBtn" type="button" aria-pressed="false">Editar ruta pelota</button>
+        <div class="node-readout" id="nodeReadout">Nodo pelota: 1</div>
+        <label>X nodo <input id="nodeX" type="range" min="60" max="940" value="850"></label>
+        <label>Y nodo <input id="nodeY" type="range" min="70" max="550" value="160"></label>
+        <button id="resetBtn" type="button">Reset ruta</button>
       </div>
 
       <div class="legend">
-        <div class="key"><span class="dot forward"></span><span>Forward</span></div>
-        <div class="key"><span class="dot"></span><span>Back</span></div>
-        <div class="key"><span class="dot enemy"></span><span>Defensa</span></div>
-        <div class="key"><span class="ball-icon"></span><span>Pelota</span></div>
-        <div class="key"><span class="line-icon"></span><span>Ruta solo preview</span></div>
+        <div class="key"><span class="mark dot forward"></span><span>Forward</span></div>
+        <div class="key"><span class="mark dot"></span><span>Back</span></div>
+        <div class="key"><span class="mark dot enemy"></span><span>Defensa</span></div>
+        <div class="key"><span class="mark ball-mark"></span><span>Pelota</span></div>
+        <div class="key"><span class="mark line-mark"></span><span>Ruta editable</span></div>
       </div>
     </aside>
 
@@ -282,7 +278,7 @@
       <section class="top">
         <div>
           <h2 id="title"></h2>
-          <p class="hint" id="desc"></p>
+          <p class="muted" id="desc"></p>
         </div>
         <div class="state" id="state">Preview</div>
       </section>
@@ -294,8 +290,8 @@
       </section>
 
       <section class="bottom">
-        <button id="play" type="button">Play</button>
-        <button id="restart" type="button">Reiniciar</button>
+        <button id="playBtn" type="button">Play</button>
+        <button id="restartBtn" type="button">Reiniciar</button>
         <input id="scrub" type="range" min="0" max="1000" value="0">
         <label>Velocidad <input id="speed" type="range" min="0.6" max="1.6" step="0.1" value="1"></label>
         <span class="time" id="clock">0.0s</span>
@@ -304,108 +300,79 @@
   </div>
 
   <script>
-    const plays = {
+    const basePlays = {
       casita: {
         name: 'Casita',
-        desc: 'Line derecha. Primer contacto. Vuelta izquierda. Cierre largo al 14.',
+        desc: 'Line derecha. Contacto corto. Vuelta izquierda. Cierre al 14.',
         duration: 15,
-        start: [850, 160],
-        ball: [
-          [850,160], [800,250], [710,292], [630,292], [565,292], [520,292],
-          [468,332], [392,355], [315,375], [240,400], [190,415],
-          [300,468], [405,462], [520,452], [635,438], [750,415], [865,386], [930,370]
-        ],
         players: {
-          1:[790,190], 2:[850,160], 3:[820,210], 4:[755,222], 6:[715,258],
-          7:[610,275], 8:[560,292], 9:[690,338], 10:[615,326],
-          11:[320,422], 12:[392,386], 13:[235,402], 14:[865,386], 15:[305,378]
+          1:[800,168], 2:[850,160], 3:[820,210], 4:[760,218], 6:[720,252],
+          7:[610,275], 8:[555,300], 9:[675,340], 10:[610,333],
+          11:[320,425], 12:[392,388], 13:[235,405], 14:[865,382], 15:[305,378]
         },
-        moving: {
-          9:[[682,330],[520,325],[190,438],[405,480]],
-          10:[[615,326],[465,335],[300,468],[520,452]],
-          14:[[865,386],[930,370]]
-        },
-        enemies: [[535,250],[450,290],[360,335],[275,385],[635,350],[735,365],[830,385]],
-        rucks: [[520,292],[190,415],[405,462]],
+        enemies: [[535,250],[455,292],[360,335],[275,386],[635,354],[735,365],[830,388]],
+        rucks: [[520,300],[190,415],[405,462]],
+        route: [[850,160],[800,250],[675,340],[610,333],[555,300],[520,300],[470,345],[610,333],[305,378],[392,388],[235,405],[190,415],[250,458],[405,462],[520,442],[610,420],[700,405],[790,392],[865,382],[930,370]],
         fake: []
       },
       j25: {
         name: 'Jugada 25',
-        desc: 'Scrum. 12 al contacto. 15 entre 13 y 14. Escalera final al 11.',
+        desc: 'Scrum. 12 al contacto. 15 entra. Escalera final al 11.',
         duration: 14,
-        start: [555,330],
-        ball: [
-          [555,330], [505,350], [410,350], [325,340], [275,340],
-          [360,300], [455,305], [548,315], [642,330], [745,350],
-          [680,448], [585,470], [492,482], [400,477], [305,462], [205,438], [100,415], [60,410]
-        ],
         players: {
           1:[305,462], 2:[400,477], 3:[492,482], 4:[565,420], 5:[205,438],
           7:[292,300], 8:[555,330], 9:[505,350], 10:[585,470],
           11:[100,415], 12:[325,340], 13:[548,300], 14:[750,352], 15:[642,330]
         },
-        moving: {
-          9:[[505,350],[275,380],[745,390],[680,448]],
-          12:[[325,340],[275,340]],
-          14:[[745,350],[775,345]],
-          11:[[100,415],[60,410]]
-        },
         enemies: [[300,292],[245,340],[330,390],[470,270],[560,292],[660,325],[750,382],[390,430],[185,410]],
         rucks: [[275,340],[745,350],[680,448]],
+        route: [[555,330],[505,350],[325,340],[275,340],[330,372],[505,350],[585,470],[548,300],[642,330],[750,352],[745,350],[680,448],[505,350],[492,482],[400,477],[305,462],[205,438],[100,415],[60,410]],
         fake: []
       },
       j27: {
         name: 'Jugada 27',
-        desc: 'Scrum a izquierda. Finta corta. Cambio al lado de entrada. 11 final.',
+        desc: 'Scrum a izquierda. Finta. Cambio al lado de entrada. 11 final.',
         duration: 13,
-        start: [550,335],
-        ball: [
-          [550,335], [505,350], [410,330], [315,320], [275,320],
-          [332,414], [430,458], [525,458], [620,450], [715,438], [805,426], [890,405], [950,392]
-        ],
         players: {
           1:[430,458], 2:[525,458], 3:[805,426], 4:[620,450], 5:[715,438],
           7:[215,292], 8:[335,370], 9:[505,350], 10:[425,345],
           11:[890,405], 12:[315,320], 13:[250,330], 14:[190,372], 15:[270,455]
         },
-        moving: {
-          9:[[505,350],[275,390],[360,430]],
-          12:[[315,320],[275,320]],
-          13:[[250,330],[185,300]],
-          11:[[890,405],[950,392]]
-        },
         enemies: [[300,270],[260,320],[225,365],[460,315],[555,335],[650,355],[750,385],[850,410],[930,425]],
         rucks: [[275,320],[805,426]],
-        fake: [[275,390],[230,335],[180,300]]
+        route: [[550,335],[505,350],[315,320],[275,320],[505,350],[430,458],[525,458],[620,450],[715,438],[805,426],[805,426],[505,350],[890,405],[950,392]],
+        fake: [[505,350],[250,330],[215,292]]
       }
     };
 
     const forwards = new Set(['1','2','3','4','5','6','7','8']);
+    const plays = structuredClone(basePlays);
     const board = document.getElementById('board');
-    const playList = document.getElementById('plays');
+    const playList = document.getElementById('playList');
     const title = document.getElementById('title');
     const desc = document.getElementById('desc');
     const state = document.getElementById('state');
-    const previewBtn = document.getElementById('preview');
-    const animationBtn = document.getElementById('animation');
-    const playBtn = document.getElementById('play');
-    const restartBtn = document.getElementById('restart');
+    const previewBtn = document.getElementById('previewBtn');
+    const simBtn = document.getElementById('simBtn');
+    const editBtn = document.getElementById('editBtn');
+    const nodeReadout = document.getElementById('nodeReadout');
+    const nodeX = document.getElementById('nodeX');
+    const nodeY = document.getElementById('nodeY');
+    const resetBtn = document.getElementById('resetBtn');
+    const playBtn = document.getElementById('playBtn');
+    const restartBtn = document.getElementById('restartBtn');
     const scrub = document.getElementById('scrub');
     const speed = document.getElementById('speed');
     const clock = document.getElementById('clock');
-    const editBallBtn = document.getElementById('editBall');
-    const resetBallBtn = document.getElementById('resetBall');
-    const ballX = document.getElementById('ballX');
-    const ballY = document.getElementById('ballY');
 
     let current = 'casita';
     let mode = 'preview';
+    let editing = false;
     let playing = false;
     let time = 0;
-    let previous = 0;
-    let editing = false;
-    let dragging = false;
-    const customStarts = {};
+    let selectedNode = 0;
+    let draggingNode = null;
+    let previousFrame = 0;
 
     Object.entries(plays).forEach(([id, play]) => {
       const button = document.createElement('button');
@@ -415,63 +382,65 @@
       button.addEventListener('click', () => {
         current = id;
         time = 0;
+        selectedNode = 0;
+        editing = false;
         playing = false;
         render();
       });
       playList.appendChild(button);
     });
 
-    function activePlay() {
-      return plays[current];
+    function play() { return plays[current]; }
+    function basePlay() { return basePlays[current]; }
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function dist(a, b) { return Math.hypot(a[0] - b[0], a[1] - b[1]); }
+    function lerp(a, b, k) { return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k]; }
+    function ease(k) { return k * k * (3 - 2 * k); }
+
+    function pathLength(points) {
+      let total = 0;
+      for (let i = 1; i < points.length; i++) total += dist(points[i - 1], points[i]);
+      return total;
     }
 
-    function startPoint(play) {
-      return customStarts[current] || play.start;
-    }
-
-    function route(play) {
-      return [startPoint(play), ...play.ball.slice(1)];
-    }
-
-    function clamp(value, min, max) {
-      return Math.max(min, Math.min(max, value));
-    }
-
-    function lerp(a, b, k) {
-      return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
-    }
-
-    function ease(k) {
-      return k * k * (3 - 2 * k);
-    }
-
-    function pointOn(points, progress) {
-      if (progress <= 0) return points[0];
-      if (progress >= 1) return points[points.length - 1];
-      const scaled = progress * (points.length - 1);
-      const index = Math.floor(scaled);
-      return lerp(points[index], points[index + 1], scaled - index);
-    }
-
-    function playerPoint(number, base, progress) {
-      const path = activePlay().moving[number];
-      if (!path) return base;
-      return pointOn(path, ease(progress));
-    }
-
-    function pathData(points, curved = true) {
-      if (!curved || points.length < 3) return `M ${points.map(p => p.join(' ')).join(' L ')}`;
-      let d = `M ${points[0][0]} ${points[0][1]}`;
-      for (let i = 1; i < points.length - 1; i++) {
-        const mid = [(points[i][0] + points[i + 1][0]) / 2, (points[i][1] + points[i + 1][1]) / 2];
-        d += ` Q ${points[i][0]} ${points[i][1]} ${mid[0]} ${mid[1]}`;
+    function pointAtDistance(points, distance) {
+      let walked = 0;
+      for (let i = 1; i < points.length; i++) {
+        const segment = dist(points[i - 1], points[i]);
+        if (walked + segment >= distance) {
+          return lerp(points[i - 1], points[i], (distance - walked) / Math.max(1, segment));
+        }
+        walked += segment;
       }
-      const last = points[points.length - 1];
-      d += ` T ${last[0]} ${last[1]}`;
-      return d;
+      return points[points.length - 1];
     }
 
-    function arrowFor(a, b) {
+    function progressPoint(points, progress) {
+      return pointAtDistance(points, pathLength(points) * clamp(progress, 0, 1));
+    }
+
+    function nearestNodeIndex(points, progress) {
+      const target = pathLength(points) * clamp(progress, 0, 1);
+      let walked = 0;
+      let best = 0;
+      let bestDelta = Infinity;
+      points.forEach((point, index) => {
+        if (index > 0) walked += dist(points[index - 1], point);
+        const delta = Math.abs(target - walked);
+        if (delta < bestDelta) {
+          bestDelta = delta;
+          best = index;
+        }
+      });
+      return best;
+    }
+
+    function d(points) {
+      if (points.length < 2) return '';
+      return `M ${points.map(point => `${point[0]} ${point[1]}`).join(' L ')}`;
+    }
+
+    function arrow(a, b) {
       const angle = Math.atan2(b[1] - a[1], b[0] - a[0]);
       const size = 12;
       const p1 = [b[0] - size * Math.cos(angle - .45), b[1] - size * Math.sin(angle - .45)];
@@ -479,36 +448,11 @@
       return `${b[0]},${b[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}`;
     }
 
-    function player(number, point) {
-      const type = forwards.has(number) ? 'forward' : 'back';
-      return `<g class="player ${type}" transform="translate(${point[0]} ${point[1]})">
-        <circle r="18"></circle>
-        <text>${number}</text>
-      </g>`;
-    }
-
-    function ball(point) {
-      return `<g transform="translate(${point[0]} ${point[1]}) rotate(-18)">
-        <ellipse class="ball" rx="15" ry="9"></ellipse>
-      </g>`;
-    }
-
-    function ruck(point, preview) {
-      const cls = preview ? 'ruck preview' : 'ruck';
-      return `<path class="${cls}" d="M ${point[0] - 24} ${point[1]}
-        L ${point[0] - 12} ${point[1] - 18}
-        L ${point[0] + 5} ${point[1] - 24}
-        L ${point[0] + 20} ${point[1] - 12}
-        L ${point[0] + 26} ${point[1] + 6}
-        L ${point[0] + 8} ${point[1] + 22}
-        L ${point[0] - 13} ${point[1] + 18} Z"></path>`;
-    }
-
     function field(preview) {
       if (preview) {
-        return `<rect class="paper-bg" width="1000" height="620"></rect>
-          <rect x="40" y="40" width="920" height="540" fill="none" stroke="rgba(0,0,0,.1)" stroke-width="2"></rect>
-          <text class="small-label" x="62" y="72">Preview tactico</text>`;
+        return `<rect class="paper" width="1000" height="620"></rect>
+          <rect class="paper-line" x="40" y="40" width="920" height="540"></rect>
+          <text class="label" x="62" y="72">Preview tactico</text>`;
       }
       return `<rect class="field-bg" width="1000" height="620"></rect>
         <rect class="stripe" x="105" y="35" width="145" height="550"></rect>
@@ -525,85 +469,153 @@
         <text class="field-label" x="905" y="315">TRY</text>`;
     }
 
+    function player(number, point, active) {
+      const role = forwards.has(number) ? 'forward' : 'back';
+      return `<g class="player ${role}" transform="translate(${point[0]} ${point[1]})">
+        ${active ? '<circle class="active-ring" r="24"></circle>' : ''}
+        <circle r="18"></circle>
+        <text>${number}</text>
+      </g>`;
+    }
+
+    function ball(point) {
+      return `<g transform="translate(${point[0]} ${point[1]}) rotate(-18)">
+        <ellipse class="ball" rx="15" ry="9"></ellipse>
+      </g>`;
+    }
+
+    function ruck(point, preview) {
+      return `<path class="${preview ? 'ruck preview' : 'ruck'}" d="
+        M ${point[0]-26} ${point[1]}
+        L ${point[0]-13} ${point[1]-20}
+        L ${point[0]+5} ${point[1]-24}
+        L ${point[0]+24} ${point[1]-8}
+        L ${point[0]+20} ${point[1]+14}
+        L ${point[0]} ${point[1]+24}
+        L ${point[0]-18} ${point[1]+15} Z"></path>`;
+    }
+
+    function routeSubset(points, progress) {
+      const total = pathLength(points);
+      const target = total * clamp(progress, 0, 1);
+      const result = [points[0]];
+      let walked = 0;
+      for (let i = 1; i < points.length; i++) {
+        const segment = dist(points[i - 1], points[i]);
+        if (walked + segment < target) {
+          result.push(points[i]);
+        } else {
+          result.push(lerp(points[i - 1], points[i], (target - walked) / Math.max(1, segment)));
+          break;
+        }
+        walked += segment;
+      }
+      return result;
+    }
+
+    function closestPlayerToBall(ballPoint) {
+      let best = null;
+      let bestDistance = Infinity;
+      Object.entries(play().players).forEach(([number, point]) => {
+        const delta = dist(ballPoint, point);
+        if (delta < bestDistance) {
+          bestDistance = delta;
+          best = number;
+        }
+      });
+      return bestDistance < 58 ? best : null;
+    }
+
+    function syncInputs() {
+      const point = play().route[selectedNode];
+      nodeX.value = Math.round(point[0]);
+      nodeY.value = Math.round(point[1]);
+      nodeReadout.textContent = `Nodo pelota: ${selectedNode + 1} / ${play().route.length}`;
+    }
+
     function render() {
-      const play = activePlay();
-      const progress = play.duration ? time / play.duration : 0;
+      const item = play();
+      const progress = clamp(time / item.duration, 0, 1);
       const preview = mode === 'preview';
-      const actualRoute = route(play);
+      const ballPoint = progressPoint(item.route, ease(progress));
+      if (!editing && !preview) selectedNode = nearestNodeIndex(item.route, progress);
       let html = field(preview);
 
       if (preview) {
-        html += `<path class="route" d="${pathData(actualRoute)}"></path>`;
-        for (let i = 1; i < actualRoute.length; i += 3) {
-          html += `<polygon class="arrow" points="${arrowFor(actualRoute[i - 1], actualRoute[i])}"></polygon>`;
+        html += `<path class="route" d="${d(item.route)}"></path>`;
+        for (let i = 2; i < item.route.length; i += 4) html += `<polygon class="arrow" points="${arrow(item.route[i - 1], item.route[i])}"></polygon>`;
+        if (item.fake.length) html += `<path class="route-muted" d="${d(item.fake)}"></path>`;
+        if (editing) {
+          item.route.forEach((point, index) => {
+            html += `<circle class="node ${index === selectedNode ? 'selected' : ''}" data-node="${index}" cx="${point[0]}" cy="${point[1]}" r="${index === selectedNode ? 7 : 5}"></circle>`;
+          });
         }
-        if (play.fake.length) html += `<path class="route secondary" d="${pathData(play.fake, false)}"></path>`;
+      } else {
+        const trail = routeSubset(item.route, ease(progress));
+        if (trail.length > 1) html += `<path class="trail" d="${d(trail)}"></path>`;
       }
 
-      for (const enemy of play.enemies) html += `<circle class="enemy" cx="${enemy[0]}" cy="${enemy[1]}" r="10"></circle>`;
-      for (const item of play.rucks) {
-        if (preview || distance(pointOn(actualRoute, progress), item) < 80) html += ruck(item, preview);
-      }
-
-      Object.entries(play.players).forEach(([number, base]) => {
-        const point = preview ? base : playerPoint(number, base, progress);
-        html += player(number, point);
+      item.enemies.forEach(point => html += `<circle class="enemy" cx="${point[0]}" cy="${point[1]}" r="10"></circle>`);
+      item.rucks.forEach(point => {
+        if (preview || dist(ballPoint, point) < 65) html += ruck(point, preview);
       });
 
-      html += ball(preview ? startPoint(play) : pointOn(actualRoute, ease(progress)));
-      board.innerHTML = html;
+      const active = closestPlayerToBall(ballPoint);
+      Object.entries(item.players).forEach(([number, point]) => html += player(number, point, number === active));
+      html += ball(preview ? item.route[editing ? selectedNode : 0] : ballPoint);
 
-      title.textContent = play.name;
-      desc.textContent = play.desc;
-      state.textContent = preview ? 'Preview' : playing ? 'Animando' : 'Animacion pausada';
+      board.innerHTML = html;
+      title.textContent = item.name;
+      desc.textContent = item.desc;
+      state.textContent = preview ? 'Preview' : playing ? 'Simulando' : 'Simulacion pausada';
       previewBtn.setAttribute('aria-pressed', String(preview));
-      animationBtn.setAttribute('aria-pressed', String(!preview));
-      editBallBtn.setAttribute('aria-pressed', String(editing));
+      simBtn.setAttribute('aria-pressed', String(!preview));
+      editBtn.setAttribute('aria-pressed', String(editing));
+      editBtn.textContent = editing ? 'Salir de edicion' : 'Editar ruta pelota';
       playBtn.textContent = playing ? 'Pausa' : 'Play';
       scrub.value = Math.round(progress * 1000);
       clock.textContent = `${time.toFixed(1)}s`;
-      ballX.value = Math.round(startPoint(play)[0]);
-      ballY.value = Math.round(startPoint(play)[1]);
       [...playList.children].forEach((button, index) => button.classList.toggle('active', Object.keys(plays)[index] === current));
-    }
-
-    function distance(a, b) {
-      return Math.hypot(a[0] - b[0], a[1] - b[1]);
-    }
-
-    function tick(now) {
-      if (!previous) previous = now;
-      const dt = (now - previous) / 1000;
-      previous = now;
-      if (playing && mode === 'animation') {
-        time += dt * Number(speed.value);
-        if (time >= activePlay().duration) {
-          time = activePlay().duration;
-          playing = false;
-        }
-        render();
-      }
-      requestAnimationFrame(tick);
+      syncInputs();
     }
 
     function setMode(next) {
       mode = next;
-      if (mode === 'preview') playing = false;
+      if (next === 'preview') playing = false;
+      render();
+    }
+
+    function moveNode(index, point) {
+      play().route[index] = [clamp(point[0], 60, 940), clamp(point[1], 70, 550)];
+      selectedNode = index;
       render();
     }
 
     function svgPoint(event) {
-      const pt = board.createSVGPoint();
-      pt.x = event.clientX;
-      pt.y = event.clientY;
-      return pt.matrixTransform(board.getScreenCTM().inverse());
+      const point = board.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const transformed = point.matrixTransform(board.getScreenCTM().inverse());
+      return [transformed.x, transformed.y];
     }
 
     previewBtn.addEventListener('click', () => setMode('preview'));
-    animationBtn.addEventListener('click', () => setMode('animation'));
+    simBtn.addEventListener('click', () => setMode('sim'));
+    editBtn.addEventListener('click', () => {
+      editing = !editing;
+      mode = 'preview';
+      playing = false;
+      render();
+    });
+    resetBtn.addEventListener('click', () => {
+      plays[current].route = structuredClone(basePlay().route);
+      selectedNode = 0;
+      render();
+    });
     playBtn.addEventListener('click', () => {
-      mode = 'animation';
-      if (time >= activePlay().duration) time = 0;
+      mode = 'sim';
+      editing = false;
+      if (time >= play().duration) time = 0;
       playing = !playing;
       render();
     });
@@ -613,44 +625,49 @@
       render();
     });
     scrub.addEventListener('input', () => {
-      mode = 'animation';
+      mode = 'sim';
       playing = false;
-      time = Number(scrub.value) / 1000 * activePlay().duration;
+      time = Number(scrub.value) / 1000 * play().duration;
       render();
     });
-    editBallBtn.addEventListener('click', () => {
-      editing = !editing;
-      mode = 'preview';
-      playing = false;
-      render();
-    });
-    resetBallBtn.addEventListener('click', () => {
-      delete customStarts[current];
-      render();
-    });
-    ballX.addEventListener('input', () => {
-      customStarts[current] = [Number(ballX.value), Number(ballY.value)];
-      render();
-    });
-    ballY.addEventListener('input', () => {
-      customStarts[current] = [Number(ballX.value), Number(ballY.value)];
-      render();
-    });
+    nodeX.addEventListener('input', () => moveNode(selectedNode, [Number(nodeX.value), Number(nodeY.value)]));
+    nodeY.addEventListener('input', () => moveNode(selectedNode, [Number(nodeX.value), Number(nodeY.value)]));
+
     board.addEventListener('pointerdown', event => {
       if (!editing || mode !== 'preview') return;
-      const p = svgPoint(event);
-      if (distance([p.x, p.y], startPoint(activePlay())) < 36) dragging = true;
-    });
-    board.addEventListener('pointermove', event => {
-      if (!dragging) return;
-      const p = svgPoint(event);
-      customStarts[current] = [clamp(p.x, 70, 930), clamp(p.y, 80, 540)];
+      const node = event.target.closest('[data-node]');
+      if (!node) return;
+      draggingNode = Number(node.dataset.node);
+      selectedNode = draggingNode;
+      board.setPointerCapture(event.pointerId);
       render();
     });
-    window.addEventListener('pointerup', () => dragging = false);
+    board.addEventListener('pointermove', event => {
+      if (draggingNode === null) return;
+      moveNode(draggingNode, svgPoint(event));
+    });
+    board.addEventListener('pointerup', event => {
+      draggingNode = null;
+      try { board.releasePointerCapture(event.pointerId); } catch (_) {}
+    });
+
+    function loop(now) {
+      if (!previousFrame) previousFrame = now;
+      const delta = (now - previousFrame) / 1000;
+      previousFrame = now;
+      if (playing && mode === 'sim') {
+        time += delta * Number(speed.value);
+        if (time >= play().duration) {
+          time = play().duration;
+          playing = false;
+        }
+        render();
+      }
+      requestAnimationFrame(loop);
+    }
 
     render();
-    requestAnimationFrame(tick);
+    requestAnimationFrame(loop);
   </script>
 </body>
 </html>

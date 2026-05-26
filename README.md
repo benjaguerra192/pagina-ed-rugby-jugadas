@@ -28,10 +28,10 @@ http://127.0.0.1:8057/index.html
 
 - Campo de rugby
 - Jugadores por numero
-- Preview esquematico tipo pizarra
-- Animacion sin flechas
+- Preview tactico tipo pizarra
+- Simulacion sin flechas
 - Defensa rival
-- Pelota editable
+- Ruta de pelota editable por nodos
 - Selector de jugada
 
 ## Colores
@@ -39,7 +39,15 @@ http://127.0.0.1:8057/index.html
 - Triangulos: jugadores
 - Ovalo marron: pelota
 - Puntos negros: defensa
-- Lineas grises: ruta solo en preview
+- Lineas grises: ruta editable del preview
+
+## Motor visual
+
+- SVG con `viewBox` y `preserveAspectRatio`
+- Jugadores estables
+- Pelota animada por distancia real sobre ruta
+- Trail visible solo en simulacion
+- Nodos de ruta visibles solo en modo edicion
 
 ## Archivos
 
