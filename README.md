@@ -28,20 +28,18 @@ http://127.0.0.1:8057/index.html
 
 - Campo de rugby
 - Jugadores por numero
-- Pases
-- Carreras
-- Rucks
-- Fintas
-- Try
+- Preview esquematico tipo pizarra
+- Animacion sin flechas
+- Defensa rival
+- Pelota editable
 - Selector de jugada
-- Pasos por jugada
 
 ## Colores
 
-- Celeste: pase
-- Amarillo: carrera
-- Rojo: contacto o ruck
-- Violeta punteado: finta
+- Triangulos: jugadores
+- Ovalo marron: pelota
+- Puntos negros: defensa
+- Lineas grises: ruta solo en preview
 
 ## Archivos
 
