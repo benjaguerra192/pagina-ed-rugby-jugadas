@@ -6,19 +6,21 @@
   <title>Jugadas Rugby 15</title>
   <style>
     :root {
-      --bg: #111816;
-      --panel: #f5f1e8;
-      --ink: #18201d;
-      --muted: #60706a;
-      --field: #2f7d47;
-      --field-dark: #266a3b;
+      --bg: #101514;
+      --panel: #f4efe3;
+      --ink: #17201d;
+      --muted: #64736e;
+      --field: #2e7e49;
       --line: rgba(255,255,255,.78);
-      --ball: #b85b2b;
-      --move: #f5b83f;
-      --pass: #61b8ff;
-      --ruck: #df554d;
-      --fake: #9f72e6;
-      --try: #f7f0c2;
+      --pass: #40a9ff;
+      --run: #ffbd3d;
+      --ruck: #e44f4b;
+      --fake: #9b6df0;
+      --attack: #fff1d0;
+      --backs: #cfeaff;
+      --def: #20312c;
+      --ball: #b95b2e;
+      --try: #fff2a8;
     }
 
     * { box-sizing: border-box; }
@@ -33,15 +35,15 @@
 
     .app {
       display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
+      grid-template-columns: 292px minmax(0, 1fr);
       min-height: 100vh;
     }
 
     aside {
       background: var(--panel);
       color: var(--ink);
-      padding: 18px;
-      border-right: 1px solid rgba(0,0,0,.15);
+      padding: 16px;
+      border-right: 1px solid rgba(0,0,0,.18);
     }
 
     h1, h2, p { margin: 0; }
@@ -49,171 +51,162 @@
     h1 {
       font-size: 22px;
       line-height: 1.05;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
-    .plays {
+    .plays, .tools, .legend {
       display: grid;
       gap: 8px;
-      margin-bottom: 18px;
     }
+
+    .plays { margin-bottom: 14px; }
+    .tools { margin: 14px 0; }
 
     button {
-      min-height: 42px;
-      border: 1px solid #c8c0b0;
+      border: 1px solid #c8beaa;
       background: #fffaf0;
       color: var(--ink);
-      font-weight: 700;
+      font-weight: 800;
       border-radius: 8px;
+      min-height: 40px;
+      padding: 9px 11px;
       cursor: pointer;
-      text-align: left;
-      padding: 10px 12px;
     }
 
-    button.active {
-      background: #18201d;
+    .plays button { text-align: left; }
+    button.active, button[aria-pressed="true"] {
+      background: var(--ink);
       color: #fffaf0;
-      border-color: #18201d;
+      border-color: var(--ink);
     }
+
+    .tool-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    input[type="range"] { accent-color: var(--run); width: 100%; }
 
     .legend {
-      display: grid;
-      gap: 9px;
-      font-size: 13px;
       color: var(--muted);
+      font-size: 13px;
     }
 
     .key {
       display: grid;
       grid-template-columns: 22px 1fr;
-      align-items: center;
       gap: 8px;
+      align-items: center;
     }
 
     .swatch {
       width: 22px;
       height: 4px;
       border-radius: 999px;
-      background: var(--pass);
     }
 
-    .swatch.move { background: var(--move); }
-    .swatch.ruck { background: var(--ruck); }
-    .swatch.fake { background: var(--fake); border-top: 3px dashed var(--fake); background: transparent; }
+    .pass-s { background: var(--pass); }
+    .run-s { background: var(--run); }
+    .ruck-s { background: var(--ruck); }
+    .fake-s {
+      border-top: 3px dashed var(--fake);
+      height: 0;
+    }
 
     main {
       display: grid;
-      grid-template-rows: auto minmax(360px, 1fr) auto;
-      gap: 14px;
-      padding: 18px;
+      grid-template-rows: auto minmax(440px, 1fr) auto;
+      gap: 12px;
+      padding: 16px;
       min-width: 0;
     }
 
     .top {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
+      gap: 14px;
+      align-items: stretch;
     }
 
-    .title h2 {
-      font-size: 26px;
-      margin-bottom: 4px;
+    h2 {
+      font-size: 28px;
+      margin-bottom: 5px;
     }
 
-    .title p {
-      color: #c7d2cd;
-      max-width: 860px;
+    .summary {
+      color: #c8d4ce;
       line-height: 1.35;
+      max-width: 920px;
     }
 
     .stepbox {
-      min-width: 250px;
-      background: rgba(245,241,232,.08);
-      border: 1px solid rgba(245,241,232,.18);
+      background: rgba(244,239,227,.08);
+      border: 1px solid rgba(244,239,227,.18);
       border-radius: 8px;
-      padding: 10px 12px;
-      color: #f6eddc;
+      padding: 11px 12px;
     }
 
-    .stepbox strong { display: block; margin-bottom: 4px; }
-    .stepbox p { line-height: 1.35; }
+    .stepbox strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #fff4df;
+    }
+
+    .stepbox p {
+      line-height: 1.35;
+      color: #eadfca;
+    }
 
     .field-wrap {
-      min-height: 360px;
-      border: 1px solid rgba(245,241,232,.22);
+      border: 1px solid rgba(244,239,227,.22);
       border-radius: 8px;
       overflow: hidden;
       background: #203029;
+      position: relative;
     }
 
     svg {
       display: block;
       width: 100%;
       height: 100%;
-      min-height: 520px;
+      min-height: 540px;
+      touch-action: none;
     }
 
-    .controls {
-      display: flex;
+    .bottom {
+      display: grid;
+      grid-template-columns: auto auto minmax(160px, 620px) auto auto;
+      gap: 9px;
       align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
     }
 
-    .controls button {
-      width: auto;
-      min-width: 92px;
-      text-align: center;
-      background: #fffaf0;
-    }
+    .bottom button { min-width: 94px; }
+    .timeline { color: #dce3df; font-weight: 800; min-width: 62px; }
 
-    input[type="range"] {
-      width: min(520px, 100%);
-      accent-color: var(--move);
-    }
-
-    .timeline {
-      color: #d9e1dd;
-      font-size: 14px;
-      min-width: 120px;
-    }
-
-    .player text {
-      font-weight: 800;
-      fill: #111816;
+    .speed {
+      display: grid;
+      grid-template-columns: 58px minmax(90px, 150px);
+      gap: 8px;
+      align-items: center;
+      color: #dce3df;
       font-size: 13px;
-      text-anchor: middle;
-      dominant-baseline: central;
-      pointer-events: none;
-    }
-
-    .player circle {
-      fill: #fff5dc;
-      stroke: #111816;
-      stroke-width: 2;
-    }
-
-    .back circle { fill: #cfe8ff; }
-    .forward circle { fill: #ffe1c2; }
-    .ball-carrier circle { stroke: var(--ball); stroke-width: 5; }
-    .support circle { stroke: var(--move); stroke-width: 4; }
-    .rucker circle { stroke: var(--ruck); stroke-width: 4; }
-    .ghost { opacity: .22; }
-
-    .label {
-      fill: rgba(255,255,255,.8);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .zone-label {
-      fill: rgba(255,255,255,.5);
-      font-size: 18px;
       font-weight: 800;
-      text-anchor: middle;
     }
+
+    .field-line { stroke: var(--line); stroke-width: 3; fill: none; }
+    .zone { fill: rgba(255,242,168,.18); stroke: rgba(255,242,168,.72); stroke-width: 2; }
+    .zone-text { fill: rgba(255,255,255,.55); font-size: 18px; font-weight: 900; text-anchor: middle; }
+    .side-text { fill: rgba(255,255,255,.8); font-size: 13px; font-weight: 900; }
 
     .path {
       fill: none;
@@ -221,35 +214,90 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       marker-end: url(#arrow);
+      opacity: .95;
     }
 
     .pass { stroke: var(--pass); }
-    .move { stroke: var(--move); }
-    .ruck { stroke: var(--ruck); }
-    .fake {
-      stroke: var(--fake);
-      stroke-dasharray: 9 9;
+    .run { stroke: var(--run); }
+    .ruck-line { stroke: var(--ruck); }
+    .fake { stroke: var(--fake); stroke-dasharray: 9 9; }
+
+    .route-glow {
+      fill: none;
+      stroke: rgba(0,0,0,.22);
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .ruck-zone {
-      fill: rgba(223,85,77,.26);
+      fill: rgba(228,79,75,.23);
       stroke: var(--ruck);
       stroke-width: 2;
     }
 
-    .try-zone {
-      fill: rgba(247,240,194,.2);
-      stroke: rgba(247,240,194,.7);
+    .player circle {
+      stroke: #101514;
       stroke-width: 2;
     }
 
-    @media (max-width: 860px) {
+    .player text {
+      fill: #101514;
+      font-size: 13px;
+      font-weight: 900;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+
+    .forward circle { fill: var(--attack); }
+    .back circle { fill: var(--backs); }
+    .carrier circle { stroke: var(--ball); stroke-width: 5; }
+    .rucker circle { stroke: var(--ruck); stroke-width: 4; }
+    .support circle { stroke: var(--run); stroke-width: 4; }
+
+    .defender circle {
+      fill: var(--def);
+      stroke: #d9efe5;
+      stroke-width: 2;
+    }
+
+    .defender text {
+      fill: #f2fff9;
+      font-size: 11px;
+      font-weight: 900;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+
+    .def-line {
+      stroke: rgba(255,255,255,.34);
+      stroke-width: 3;
+      stroke-dasharray: 10 8;
+      fill: none;
+    }
+
+    .ball {
+      fill: var(--ball);
+      stroke: #fff3d0;
+      stroke-width: 3;
+      cursor: grab;
+    }
+
+    .ball.editing { stroke: #ffffff; stroke-width: 5; }
+    .ball-label { fill: #fff8dd; font-size: 12px; font-weight: 900; text-anchor: middle; pointer-events: none; }
+    .try-text { fill: var(--try); font-size: 30px; font-weight: 900; text-anchor: middle; }
+
+    @media (max-width: 920px) {
       .app { grid-template-columns: 1fr; }
-      aside { border-right: 0; border-bottom: 1px solid rgba(0,0,0,.15); }
+      aside { border-right: 0; border-bottom: 1px solid rgba(0,0,0,.18); }
       .plays { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      button { text-align: center; padding-inline: 8px; }
-      main { padding: 12px; }
+      .plays button { text-align: center; }
+      .top { grid-template-columns: 1fr; }
+      main { grid-template-rows: auto minmax(380px, 1fr) auto; padding: 12px; }
       svg { min-height: 430px; }
+      .bottom { grid-template-columns: 1fr 1fr; }
+      .bottom input[type="range"], .timeline, .speed { grid-column: 1 / -1; }
     }
   </style>
 </head>
@@ -258,19 +306,31 @@
     <aside>
       <h1>Jugadas Rugby 15</h1>
       <div class="plays" id="playButtons"></div>
+
+      <div class="tools">
+        <button id="simBtn" type="button" aria-pressed="false">Simulacion</button>
+        <button id="editBallBtn" type="button" aria-pressed="false">Editar pelota</button>
+        <div class="tool-row">
+          <label>X pelota <input id="ballX" type="range" min="35" max="965" value="500"></label>
+          <label>Y pelota <input id="ballY" type="range" min="35" max="585" value="310"></label>
+        </div>
+        <button id="resetBallBtn" type="button">Reset pelota</button>
+      </div>
+
       <div class="legend">
-        <div class="key"><span class="swatch pass"></span><span>Pase</span></div>
-        <div class="key"><span class="swatch move"></span><span>Carrera</span></div>
-        <div class="key"><span class="swatch ruck"></span><span>Contacto / ruck</span></div>
-        <div class="key"><span class="swatch fake"></span><span>Finta</span></div>
+        <div class="key"><span class="swatch pass-s"></span><span>Pase</span></div>
+        <div class="key"><span class="swatch run-s"></span><span>Carrera</span></div>
+        <div class="key"><span class="swatch ruck-s"></span><span>Contacto / ruck</span></div>
+        <div class="key"><span class="swatch fake-s"></span><span>Finta</span></div>
+        <div class="key"><span></span><span>Negros: defensa rival</span></div>
       </div>
     </aside>
 
     <main>
       <section class="top">
-        <div class="title">
+        <div>
           <h2 id="playTitle"></h2>
-          <p id="playSummary"></p>
+          <p class="summary" id="playSummary"></p>
         </div>
         <div class="stepbox">
           <strong id="stepTitle"></strong>
@@ -282,11 +342,12 @@
         <svg id="field" viewBox="0 0 1000 620" role="img" aria-label="Campo con jugada de rugby"></svg>
       </section>
 
-      <section class="controls">
-        <button id="prevBtn">Anterior</button>
-        <button id="nextBtn">Siguiente</button>
+      <section class="bottom">
+        <button id="prevBtn" type="button">Anterior</button>
+        <button id="nextBtn" type="button">Siguiente</button>
         <input id="stepRange" type="range" min="0" max="0" value="0">
         <span class="timeline" id="timeline"></span>
+        <label class="speed">Velocidad <input id="speedRange" type="range" min="400" max="1800" value="900"></label>
       </section>
     </main>
   </div>
@@ -295,7 +356,7 @@
     const plays = {
       casita: {
         name: 'Casita',
-        summary: 'Line desde derecha. 9-10, células, rucks, cambio de lado y try del 14.',
+        summary: 'Line desde derecha. 9-10, celulas, rucks, cambio de lado y try del 14.',
         base: {
           1:[650,185],2:[705,175],3:[620,230],4:[690,230],5:[735,230],6:[760,285],7:[615,285],8:[520,315],
           9:[565,380],10:[480,395],11:[300,430],12:[380,410],13:[335,455],14:[865,390],15:[430,455]
@@ -303,34 +364,42 @@
         steps: [
           {
             title: '1. Line derecha',
-            text: 'Line gana. 9 abre al 10. 10 manda a célula con alas y 8.',
-            ball: 10,
+            text: 'Line gana. 9 abre al 10. 10 manda a celula con alas y 8.',
+            ball: [480,395],
+            focus: [455,345],
             players: {2:[705,175],1:[650,185],3:[620,230],4:[690,230],6:[760,285],7:[510,335],8:[545,340],11:[500,380],9:[565,380],10:[480,395]},
-            arrows: [[9,10,'pass'],[10,8,'pass'],[8,[455,345],'move'],[7,[455,365],'ruck'],[11,[455,325],'ruck']],
+            defenders: [[405,315],[420,360],[455,400],[500,430],[560,455]],
+            arrows: [[9,10,'pass'],[10,8,'pass'],[8,[455,345],'run'],[7,[455,365],'ruck-line'],[11,[455,325],'ruck-line']],
             rucks: [[455,345]]
           },
           {
             title: '2. Abre izquierda',
             text: '9 saca del ruck. 10 hace cadena hasta 15, 12 y 13.',
-            ball: 12,
+            ball: [245,420],
+            focus: [135,455],
             players: {9:[445,370],10:[380,390],15:[310,390],12:[245,420],13:[190,450]},
-            arrows: [[9,10,'pass'],[10,15,'pass'],[15,12,'pass'],[12,13,'pass'],[13,[135,455],'move']],
+            defenders: [[330,355],[275,365],[215,390],[165,425],[120,470]],
+            arrows: [[9,10,'pass'],[10,15,'pass'],[15,12,'pass'],[12,13,'pass'],[13,[135,455],'run']],
             rucks: [[135,455]]
           },
           {
-            title: '3. Nueva célula',
-            text: 'Ruck. 9 al 10. Primeros forwards del line forman célula al lado del 10.',
-            ball: 3,
+            title: '3. Nueva celula',
+            text: 'Ruck. 9 al 10. Forwards del line forman celula al lado del 10.',
+            ball: [335,390],
+            focus: [385,390],
             players: {9:[150,430],10:[235,395],1:[300,365],3:[335,390],4:[315,425]},
-            arrows: [[9,10,'pass'],[10,3,'pass'],[3,[385,390],'move'],[1,[385,370],'ruck'],[4,[385,410],'ruck']],
+            defenders: [[285,330],[345,345],[405,375],[430,420]],
+            arrows: [[9,10,'pass'],[10,3,'pass'],[3,[385,390],'run'],[1,[385,370],'ruck-line'],[4,[385,410],'ruck-line']],
             rucks: [[385,390]]
           },
           {
             title: '4. Manos a derecha',
             text: '9 abre. Pases por los restantes. Llega al 14 para try.',
-            ball: 14,
+            ball: [865,390],
+            focus: [955,390],
             players: {9:[395,410],10:[480,390],12:[560,405],13:[645,390],15:[725,410],14:[865,390]},
-            arrows: [[9,10,'pass'],[10,12,'pass'],[12,13,'pass'],[13,15,'pass'],[15,14,'pass'],[14,[955,390],'move']],
+            defenders: [[520,355],[600,360],[675,370],[760,380],[835,405],[910,420]],
+            arrows: [[9,10,'pass'],[10,12,'pass'],[12,13,'pass'],[13,15,'pass'],[15,14,'pass'],[14,[955,390],'run']],
             tryAt: [955,390]
           }
         ]
@@ -345,34 +414,42 @@
         steps: [
           {
             title: '1. Scrum y salto',
-            text: '2 hookea. 8 deja atrás. 9 abre al 12 saltando al 10.',
-            ball: 12,
+            text: '2 hookea. 8 deja atras. 9 abre al 12 saltando al 10.',
+            ball: [330,380],
+            focus: [265,360],
             players: {1:[510,260],2:[545,260],3:[580,260],8:[545,385],9:[470,400],10:[390,390],12:[330,380],11:[300,435],7:[305,350]},
-            arrows: [[2,8,'move'],[8,9,'pass'],[9,12,'pass'],[12,[265,360],'move'],[11,[265,380],'ruck'],[7,[265,340],'ruck']],
+            defenders: [[295,325],[260,360],[240,405],[315,470]],
+            arrows: [[2,8,'run'],[8,9,'pass'],[9,12,'pass'],[12,[265,360],'run'],[11,[265,380],'ruck-line'],[7,[265,340],'ruck-line']],
             rucks: [[265,360]]
           },
           {
-            title: '2. Línea con 15',
+            title: '2. Linea con 15',
             text: '9 al 10. 10-12-13. 15 entra entre 13 y 14 y descarga al 14.',
-            ball: 14,
+            ball: [670,385],
+            focus: [720,370],
             players: {9:[270,400],10:[360,390],12:[430,380],13:[505,390],15:[585,405],14:[670,385]},
-            arrows: [[9,10,'pass'],[10,12,'pass'],[12,13,'pass'],[13,15,'pass'],[15,14,'pass'],[14,[720,370],'move'],[15,[720,390],'ruck'],[13,[720,350],'ruck']],
+            defenders: [[405,345],[485,350],[560,360],[635,370],[710,390]],
+            arrows: [[9,10,'pass'],[10,12,'pass'],[12,13,'pass'],[13,15,'pass'],[15,14,'pass'],[14,[720,370],'run'],[15,[720,390],'ruck-line'],[13,[720,350],'ruck-line']],
             rucks: [[720,370]]
           },
           {
-            title: '3. Célula 1',
-            text: '9 sigue con 10. Célula 1: 3/4/1. Recibe 3, contacto. 1 limpia, 5 apoya.',
-            ball: 3,
+            title: '3. Celula 1',
+            text: '9 sigue con 10. Celula 1: 3/4/1. Recibe 3, contacto. 1 limpia, 5 apoya.',
+            ball: [555,380],
+            focus: [500,380],
             players: {9:[705,405],10:[630,390],3:[555,380],4:[525,410],1:[585,415],5:[610,445]},
-            arrows: [[9,3,'pass'],[3,[500,380],'move'],[1,[500,360],'ruck'],[5,[500,400],'ruck']],
+            defenders: [[555,345],[510,365],[475,395],[525,430]],
+            arrows: [[9,3,'pass'],[3,[500,380],'run'],[1,[500,360],'ruck-line'],[5,[500,400],'ruck-line']],
             rucks: [[500,380]]
           },
           {
-            title: '4. Célula 2 y escalera',
-            text: '9 pasa por célula 2. Después escalera: 9-10-3-2-1-5-11. 11 try.',
-            ball: 11,
-            players: {9:[500,420],10:[425,395],3:[355,380],2:[290,395],1:[230,410],5:[170,400],11:[95,385],6:[525,360],5:[170,400],2:[290,395]},
-            arrows: [[9,10,'pass'],[10,3,'pass'],[3,2,'pass'],[2,1,'pass'],[1,5,'pass'],[5,11,'pass'],[11,[45,385],'move']],
+            title: '4. Escalera final',
+            text: 'Escalera: 9-10-3-2-1-5-11. 11 corre y try.',
+            ball: [95,385],
+            focus: [45,385],
+            players: {9:[500,420],10:[425,395],3:[355,380],2:[290,395],1:[230,410],5:[170,400],11:[95,385],6:[525,360]},
+            defenders: [[410,350],[340,345],[270,360],[205,370],[135,390],[75,415]],
+            arrows: [[9,10,'pass'],[10,3,'pass'],[3,2,'pass'],[2,1,'pass'],[1,5,'pass'],[5,11,'pass'],[11,[45,385],'run']],
             tryAt: [45,385]
           }
         ]
@@ -388,33 +465,41 @@
           {
             title: '1. Scrum a izquierda',
             text: '2 hookea. 9 agarra. Pase al 12 saltando al 10.',
-            ball: 12,
+            ball: [350,375],
+            focus: [285,370],
             players: {1:[625,375],2:[675,390],3:[740,405],8:[545,390],9:[505,405],10:[420,390],12:[350,375],13:[310,405],15:[280,430],14:[240,400]},
-            arrows: [[2,8,'move'],[8,9,'pass'],[9,12,'pass'],[12,[285,370],'move'],[14,[285,350],'ruck'],[15,[285,390],'ruck']],
+            defenders: [[315,335],[280,365],[250,405],[300,465]],
+            arrows: [[2,8,'run'],[8,9,'pass'],[9,12,'pass'],[12,[285,370],'run'],[14,[285,350],'ruck-line'],[15,[285,390],'ruck-line']],
             rucks: [[285,370]]
           },
           {
-            title: '2. Célula falsa',
+            title: '2. Celula falsa',
             text: '9 amaga seguir al mismo lado. Falsa: ala cercano, 13 y 8.',
-            ball: 9,
+            ball: [285,410],
+            focus: [180,380],
             players: {9:[285,410],13:[220,385],7:[210,350],8:[235,425],10:[360,400]},
+            defenders: [[230,325],[190,365],[160,405]],
             arrows: [[9,13,'fake'],[13,[180,380],'fake'],[7,[180,350],'fake'],[8,[180,420],'fake']],
             rucks: [[285,370]]
           },
           {
             title: '3. Cambio al inicio',
-            text: '9 cambia dirección y vuelve al lado donde metió la pelota al scrum.',
-            ball: 1,
+            text: '9 cambia direccion y vuelve al lado donde metio la pelota al scrum.',
+            ball: [430,390],
+            focus: [790,410],
             players: {9:[285,410],1:[430,390],2:[510,405],4:[590,395],5:[665,410],3:[745,405],11:[830,430]},
-            arrows: [[9,1,'pass'],[1,2,'pass'],[2,4,'pass'],[4,5,'pass'],[5,3,'pass'],[3,[790,410],'move']],
+            defenders: [[475,350],[555,360],[635,375],[710,390],[785,415]],
+            arrows: [[9,1,'pass'],[1,2,'pass'],[2,4,'pass'],[4,5,'pass'],[5,3,'pass'],[3,[790,410],'run']],
             rucks: [[790,410]]
           },
           {
             title: '4. Sale 11',
-            text: 'Si tacklean al 3: dos cercanos limpian, 9 abre al 11. Si no, un pase más y 11 corre try.',
-            ball: 11,
+            text: 'Si tacklean al 3, dos cercanos limpian y 9 abre al 11. Si no, un pase mas y try.',
+            ball: [870,430],
+            focus: [955,430],
             players: {9:[785,440],3:[790,410],2:[760,385],5:[760,435],11:[870,430]},
-            arrows: [[2,[790,390],'ruck'],[5,[790,430],'ruck'],[9,11,'pass'],[11,[955,430],'move']],
+            defenders: [[800,375],[830,405],[875,445],[925,465]],
+            arrows: [[2,[790,390],'ruck-line'],[5,[790,430],'ruck-line'],[9,11,'pass'],[11,[955,430],'run']],
             rucks: [[790,410]],
             tryAt: [955,430]
           }
@@ -423,8 +508,13 @@
     };
 
     const forwards = new Set([1,2,3,4,5,6,7,8]);
+    const customBall = {};
     let currentPlay = 'casita';
     let currentStep = 0;
+    let simMode = false;
+    let editBall = false;
+    let simTimer = null;
+    let dragBall = false;
 
     const field = document.getElementById('field');
     const playButtons = document.getElementById('playButtons');
@@ -434,12 +524,48 @@
     const stepText = document.getElementById('stepText');
     const stepRange = document.getElementById('stepRange');
     const timeline = document.getElementById('timeline');
+    const simBtn = document.getElementById('simBtn');
+    const editBallBtn = document.getElementById('editBallBtn');
+    const resetBallBtn = document.getElementById('resetBallBtn');
+    const ballX = document.getElementById('ballX');
+    const ballY = document.getElementById('ballY');
+    const speedRange = document.getElementById('speedRange');
 
-    function makeButtons() {
-      Object.entries(plays).forEach(([id, play]) => {
+    function stepKey() {
+      return `${currentPlay}:${currentStep}`;
+    }
+
+    function play() {
+      return plays[currentPlay];
+    }
+
+    function step() {
+      return play().steps[currentStep];
+    }
+
+    function pos(ref, players, base) {
+      if (Array.isArray(ref)) return ref;
+      return players[ref] || base[ref];
+    }
+
+    function ballPos() {
+      return customBall[stepKey()] || step().ball || [500,310];
+    }
+
+    function setBall(point) {
+      const x = Math.max(35, Math.min(965, Math.round(point[0])));
+      const y = Math.max(35, Math.min(585, Math.round(point[1])));
+      customBall[stepKey()] = [x, y];
+      render();
+    }
+
+    function buttons() {
+      Object.entries(plays).forEach(([id, item]) => {
         const btn = document.createElement('button');
-        btn.textContent = play.name;
+        btn.type = 'button';
+        btn.textContent = item.name;
         btn.addEventListener('click', () => {
+          stopSim();
           currentPlay = id;
           currentStep = 0;
           render();
@@ -448,25 +574,17 @@
       });
     }
 
-    function line(x1, y1, x2, y2, cls) {
-      return `<path class="path ${cls}" d="M ${x1} ${y1} L ${x2} ${y2}" />`;
-    }
-
-    function pos(ref, players, base) {
-      if (Array.isArray(ref)) return ref;
-      return players[ref] || base[ref];
-    }
-
     function drawField() {
       return `
         <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"></path>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"></path>
           </marker>
         </defs>
         <rect x="0" y="0" width="1000" height="620" fill="var(--field)"></rect>
-        <rect x="0" y="0" width="1000" height="620" fill="url(#none)"></rect>
-        <g stroke="var(--line)" stroke-width="3" fill="none">
+        <rect class="zone" x="35" y="35" width="70" height="550"></rect>
+        <rect class="zone" x="895" y="35" width="70" height="550"></rect>
+        <g class="field-line">
           <rect x="35" y="35" width="930" height="550"></rect>
           <line x1="500" y1="35" x2="500" y2="585"></line>
           <line x1="105" y1="35" x2="105" y2="585"></line>
@@ -474,28 +592,57 @@
           <line x1="250" y1="35" x2="250" y2="585" stroke-dasharray="12 12"></line>
           <line x1="750" y1="35" x2="750" y2="585" stroke-dasharray="12 12"></line>
         </g>
-        <rect class="try-zone" x="35" y="35" width="70" height="550"></rect>
-        <rect class="try-zone" x="895" y="35" width="70" height="550"></rect>
-        <text class="zone-label" x="70" y="315" transform="rotate(-90 70 315)">TRY</text>
-        <text class="zone-label" x="930" y="315" transform="rotate(90 930 315)">TRY</text>
-        <text class="label" x="45" y="26">Izquierda</text>
-        <text class="label" x="870" y="26">Derecha</text>
+        <text class="zone-text" x="70" y="315" transform="rotate(-90 70 315)">TRY</text>
+        <text class="zone-text" x="930" y="315" transform="rotate(90 930 315)">TRY</text>
+        <text class="side-text" x="45" y="26">Izquierda</text>
+        <text class="side-text" x="870" y="26">Derecha</text>
       `;
     }
 
-    function drawPlayers(play, step) {
-      const players = {...play.base, ...step.players};
-      return Object.entries(players).map(([num, p]) => {
+    function drawArrows() {
+      const s = step();
+      const p = play();
+      return (s.arrows || []).map(a => {
+        const from = pos(a[0], s.players || {}, p.base);
+        const to = pos(a[1], s.players || {}, p.base);
+        return `
+          <path class="route-glow" d="M ${from[0]} ${from[1]} L ${to[0]} ${to[1]}"></path>
+          <path class="path ${a[2]}" d="M ${from[0]} ${from[1]} L ${to[0]} ${to[1]}"></path>
+        `;
+      }).join('');
+    }
+
+    function drawRucks() {
+      return (step().rucks || []).map(([x,y]) => `<ellipse class="ruck-zone" cx="${x}" cy="${y}" rx="36" ry="23"></ellipse>`).join('');
+    }
+
+    function drawDefenders() {
+      const defs = step().defenders || [];
+      const line = defs.length > 1 ? `<path class="def-line" d="M ${defs.map(p => `${p[0]} ${p[1]}`).join(' L ')}"></path>` : '';
+      const dots = defs.map((p, i) => `
+        <g class="defender" transform="translate(${p[0]} ${p[1]})">
+          <circle r="16"></circle>
+          <text>D${i + 1}</text>
+        </g>
+      `).join('');
+      return line + dots;
+    }
+
+    function drawPlayers() {
+      const p = play();
+      const s = step();
+      const players = {...s.players};
+      return Object.entries(players).map(([num, xy]) => {
         const n = Number(num);
         const role = forwards.has(n) ? 'forward' : 'back';
-        const carrier = step.ball === n ? 'ball-carrier' : '';
         let state = '';
-        for (const arrow of step.arrows || []) {
-          if (arrow[0] === n && arrow[2] === 'ruck') state = 'rucker';
-          if (arrow[0] === n && arrow[2] === 'move') state = 'support';
+        for (const a of s.arrows || []) {
+          if (a[0] === n && a[2] === 'run') state = 'support';
+          if (a[0] === n && a[2] === 'ruck-line') state = 'rucker';
         }
+        const carrier = near(xy, ballPos(), 22) ? 'carrier' : '';
         return `
-          <g class="player ${role} ${carrier} ${state}" transform="translate(${p[0]} ${p[1]})">
+          <g class="player ${role} ${state} ${carrier}" transform="translate(${xy[0]} ${xy[1]})">
             <circle r="18"></circle>
             <text>${num}</text>
           </g>
@@ -503,58 +650,151 @@
       }).join('');
     }
 
-    function drawArrows(play, step) {
-      return (step.arrows || []).map(arrow => {
-        const from = pos(arrow[0], step.players || {}, play.base);
-        const to = pos(arrow[1], step.players || {}, play.base);
-        return line(from[0], from[1], to[0], to[1], arrow[2]);
-      }).join('');
+    function drawBall() {
+      const b = ballPos();
+      return `
+        <g id="ballGroup" transform="translate(${b[0]} ${b[1]})">
+          <ellipse id="ballShape" class="ball ${editBall ? 'editing' : ''}" cx="0" cy="0" rx="14" ry="9" transform="rotate(-25)"></ellipse>
+          ${editBall ? '<text class="ball-label" y="-18">pelota</text>' : ''}
+        </g>
+      `;
     }
 
-    function drawRucks(step) {
-      return (step.rucks || []).map(([x, y]) => `<ellipse class="ruck-zone" cx="${x}" cy="${y}" rx="34" ry="22"></ellipse>`).join('');
+    function drawSimBall() {
+      if (!simMode) return '';
+      const path = simPath();
+      if (path.length < 2) return '';
+      const d = `M ${path.map(p => `${p[0]} ${p[1]}`).join(' L ')}`;
+      return `
+        <path id="simPath" d="${d}" fill="none" stroke="none"></path>
+        <ellipse class="ball" rx="15" ry="9" transform="rotate(-25)">
+          <animateMotion dur="${Number(speedRange.value) * 2.8}ms" repeatCount="indefinite" path="${d}"></animateMotion>
+        </ellipse>
+      `;
     }
 
-    function drawTry(step) {
-      if (!step.tryAt) return '';
-      return `<text x="${step.tryAt[0]}" y="${step.tryAt[1] - 30}" fill="var(--try)" font-size="28" font-weight="900" text-anchor="middle">TRY</text>`;
+    function drawTry() {
+      return step().tryAt ? `<text class="try-text" x="${step().tryAt[0]}" y="${step().tryAt[1] - 30}">TRY</text>` : '';
+    }
+
+    function simPath() {
+      const s = step();
+      const p = play();
+      const points = [ballPos()];
+      for (const a of s.arrows || []) {
+        if (a[2] === 'pass' || a[2] === 'run') points.push(pos(a[1], s.players || {}, p.base));
+      }
+      return points;
+    }
+
+    function near(a, b, dist) {
+      return Math.hypot(a[0] - b[0], a[1] - b[1]) <= dist;
     }
 
     function render() {
-      const play = plays[currentPlay];
-      const step = play.steps[currentStep];
-      playTitle.textContent = play.name;
-      playSummary.textContent = play.summary;
-      stepTitle.textContent = step.title;
-      stepText.textContent = step.text;
-      stepRange.max = play.steps.length - 1;
+      const p = play();
+      const s = step();
+      playTitle.textContent = p.name;
+      playSummary.textContent = p.summary;
+      stepTitle.textContent = s.title;
+      stepText.textContent = s.text;
+      stepRange.max = p.steps.length - 1;
       stepRange.value = currentStep;
-      timeline.textContent = `${currentStep + 1} / ${play.steps.length}`;
-      [...playButtons.children].forEach((btn, i) => {
-        btn.classList.toggle('active', Object.keys(plays)[i] === currentPlay);
-      });
-
-      field.innerHTML = drawField() + drawRucks(step) + drawArrows(play, step) + drawTry(step) + drawPlayers(play, step);
+      timeline.textContent = `${currentStep + 1} / ${p.steps.length}`;
+      simBtn.setAttribute('aria-pressed', String(simMode));
+      editBallBtn.setAttribute('aria-pressed', String(editBall));
+      [...playButtons.children].forEach((btn, i) => btn.classList.toggle('active', Object.keys(plays)[i] === currentPlay));
+      const b = ballPos();
+      ballX.value = b[0];
+      ballY.value = b[1];
+      field.innerHTML = drawField() + drawRucks() + drawDefenders() + drawArrows() + drawTry() + drawPlayers() + (simMode ? drawSimBall() : drawBall());
     }
 
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      const total = plays[currentPlay].steps.length;
-      currentStep = (currentStep - 1 + total) % total;
+    function nextStep() {
+      currentStep = (currentStep + 1) % play().steps.length;
       render();
+    }
+
+    function prevStep() {
+      currentStep = (currentStep - 1 + play().steps.length) % play().steps.length;
+      render();
+    }
+
+    function startSim() {
+      simMode = true;
+      simBtn.setAttribute('aria-pressed', 'true');
+      clearInterval(simTimer);
+      simTimer = setInterval(nextStep, Number(speedRange.value));
+      render();
+    }
+
+    function stopSim() {
+      simMode = false;
+      clearInterval(simTimer);
+      simTimer = null;
+      render();
+    }
+
+    function svgPoint(event) {
+      const pt = field.createSVGPoint();
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+      const out = pt.matrixTransform(field.getScreenCTM().inverse());
+      return [out.x, out.y];
+    }
+
+    field.addEventListener('pointerdown', event => {
+      if (!editBall || simMode) return;
+      const target = event.target;
+      if (target.id !== 'ballShape' && target.id !== 'ballGroup') return;
+      dragBall = true;
+      field.setPointerCapture(event.pointerId);
+    });
+
+    field.addEventListener('pointermove', event => {
+      if (!dragBall) return;
+      setBall(svgPoint(event));
+    });
+
+    field.addEventListener('pointerup', event => {
+      dragBall = false;
+      try { field.releasePointerCapture(event.pointerId); } catch (_) {}
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      stopSim();
+      prevStep();
     });
 
     document.getElementById('nextBtn').addEventListener('click', () => {
-      const total = plays[currentPlay].steps.length;
-      currentStep = (currentStep + 1) % total;
-      render();
+      stopSim();
+      nextStep();
     });
 
     stepRange.addEventListener('input', event => {
+      stopSim();
       currentStep = Number(event.target.value);
       render();
     });
 
-    makeButtons();
+    simBtn.addEventListener('click', () => simMode ? stopSim() : startSim());
+
+    editBallBtn.addEventListener('click', () => {
+      editBall = !editBall;
+      if (editBall) stopSim();
+      render();
+    });
+
+    resetBallBtn.addEventListener('click', () => {
+      delete customBall[stepKey()];
+      render();
+    });
+
+    ballX.addEventListener('input', () => setBall([Number(ballX.value), Number(ballY.value)]));
+    ballY.addEventListener('input', () => setBall([Number(ballX.value), Number(ballY.value)]));
+    speedRange.addEventListener('input', () => { if (simMode) startSim(); });
+
+    buttons();
     render();
   </script>
 </body>
