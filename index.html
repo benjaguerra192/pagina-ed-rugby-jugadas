@@ -6,18 +6,20 @@
   <title>Jugadas Rugby 15</title>
   <style>
     :root {
-      --bg: #141817;
-      --panel: #f1eadc;
-      --ink: #151b19;
-      --muted: #6e756f;
-      --green: #2f7f4c;
-      --paper: #f7f3e8;
-      --blue: #8fc7ff;
-      --cream: #ffdca7;
-      --enemy: #111;
-      --ball: #b85d2d;
-      --line: rgba(255,255,255,.7);
-      --route: #3f4743;
+      --bg: #0f1412;
+      --side: #efe7d8;
+      --card: #fffaf0;
+      --ink: #121817;
+      --muted: #64706b;
+      --field: #2f824d;
+      --field2: #287444;
+      --line: rgba(255,255,255,.82);
+      --forward: #ffd68f;
+      --back: #a7d7ff;
+      --route: #303a36;
+      --route2: #66706b;
+      --ball: #c26332;
+      --accent: #d99a36;
     }
 
     * { box-sizing: border-box; }
@@ -26,74 +28,77 @@
       margin: 0;
       min-height: 100vh;
       background: var(--bg);
-      color: var(--paper);
+      color: #f8f1e6;
       font-family: Arial, Helvetica, sans-serif;
-      overflow: hidden;
     }
 
     .app {
+      min-height: 100vh;
       display: grid;
-      grid-template-columns: 300px 1fr;
-      height: 100vh;
+      grid-template-columns: 320px minmax(0, 1fr);
     }
 
     aside {
-      background: var(--panel);
+      background: var(--side);
       color: var(--ink);
-      padding: 16px;
-      display: grid;
-      grid-template-rows: auto auto auto 1fr auto;
-      gap: 14px;
+      padding: 18px;
       border-right: 1px solid rgba(0,0,0,.18);
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr;
+      gap: 16px;
     }
 
     h1, h2, p { margin: 0; }
 
     h1 {
-      font-size: 22px;
-      line-height: 1;
+      font-size: 24px;
+      line-height: 1.05;
     }
 
-    .sub {
+    .hint {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.35;
       margin-top: 6px;
     }
 
-    .stack { display: grid; gap: 8px; }
-
-    button {
-      border: 1px solid #c8bdab;
-      background: #fffaf0;
-      color: var(--ink);
-      border-radius: 8px;
-      min-height: 42px;
-      padding: 10px 12px;
-      font-weight: 800;
-      cursor: pointer;
+    .stack {
+      display: grid;
+      gap: 9px;
     }
 
-    .play-btn {
-      text-align: left;
+    button {
+      min-height: 42px;
+      border: 1px solid #c9bda9;
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--ink);
+      font-weight: 900;
+      cursor: pointer;
+      padding: 10px 12px;
     }
 
     button.active,
     button[aria-pressed="true"] {
       background: var(--ink);
-      color: #fffaf0;
+      color: var(--card);
       border-color: var(--ink);
     }
 
-    .mode {
+    .play-btn {
+      text-align: left;
+      font-size: 16px;
+    }
+
+    .row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 9px;
     }
 
     label {
       display: grid;
-      gap: 5px;
+      gap: 7px;
       color: var(--muted);
       font-size: 12px;
       font-weight: 900;
@@ -102,124 +107,143 @@
 
     input[type="range"] {
       width: 100%;
-      accent-color: #d99638;
+      accent-color: var(--accent);
     }
 
     .legend {
       display: grid;
-      gap: 9px;
-      align-self: start;
+      gap: 10px;
+      align-content: start;
       color: var(--muted);
       font-size: 13px;
     }
 
     .key {
       display: grid;
-      grid-template-columns: 24px 1fr;
+      grid-template-columns: 28px 1fr;
       gap: 8px;
       align-items: center;
     }
 
-    .tri {
-      width: 0;
-      height: 0;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      border-left: 18px solid var(--cream);
-      filter: drop-shadow(0 0 0 #111);
+    .dot, .ball-icon, .line-icon {
+      display: block;
+      justify-self: center;
     }
 
-    .ball-mark {
-      width: 22px;
-      height: 10px;
+    .dot {
+      width: 21px;
+      height: 21px;
+      border-radius: 50%;
+      border: 2px solid #111;
+      background: var(--back);
+    }
+
+    .dot.forward { background: var(--forward); }
+    .dot.enemy { background: #111; width: 16px; height: 16px; border: 0; }
+
+    .ball-icon {
+      width: 24px;
+      height: 14px;
       border-radius: 50%;
       background: var(--ball);
+      border: 2px solid #f8e9c8;
       transform: rotate(-20deg);
     }
 
-    .enemy-mark {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--enemy);
-    }
-
-    .route-mark {
-      width: 24px;
-      height: 3px;
+    .line-icon {
+      width: 26px;
+      height: 4px;
+      border-radius: 999px;
       background: var(--route);
-      border-radius: 9px;
     }
 
     main {
-      height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 12px;
-      padding: 16px;
       min-width: 0;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      gap: 14px;
     }
 
     .top {
       display: flex;
+      align-items: end;
       justify-content: space-between;
       gap: 16px;
-      align-items: end;
     }
 
     h2 {
-      font-size: 30px;
+      font-size: 34px;
       line-height: 1;
     }
 
-    .status {
-      color: #d8ded9;
-      font-size: 14px;
-      font-weight: 800;
-      text-align: right;
+    .state {
+      font-weight: 900;
+      color: #e9f2ee;
     }
 
-    .stage {
-      position: relative;
-      border: 1px solid rgba(255,255,255,.17);
-      border-radius: 10px;
+    .board-wrap {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .board-shell {
+      width: 100%;
+      max-height: 100%;
+      aspect-ratio: 1000 / 620;
+      border-radius: 12px;
       overflow: hidden;
-      background: #26342e;
-      min-height: 420px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: #1f2b27;
+      box-shadow: 0 16px 44px rgba(0,0,0,.32);
     }
 
-    canvas {
+    svg {
       width: 100%;
       height: 100%;
       display: block;
-      cursor: default;
-    }
-
-    canvas.editing {
-      cursor: grab;
+      background: var(--field);
     }
 
     .bottom {
       display: grid;
-      grid-template-columns: auto auto minmax(180px, 1fr) 110px 110px;
-      gap: 9px;
+      grid-template-columns: 90px 100px minmax(160px, 1fr) 170px 72px;
+      gap: 10px;
       align-items: center;
     }
 
-    .pill {
-      color: #dce3df;
+    .time {
       font-weight: 900;
-      font-size: 13px;
-      text-align: center;
+      color: #e9f2ee;
+      text-align: right;
     }
 
+    .paper-bg { fill: #f7f2e6; }
+    .field-bg { fill: var(--field); }
+    .stripe { fill: var(--field2); opacity: .32; }
+    .field-line { fill: none; stroke: var(--line); stroke-width: 3; stroke-linecap: round; }
+    .dash { stroke-dasharray: 12 14; }
+    .route { fill: none; stroke: var(--route); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; opacity: .48; }
+    .route.secondary { stroke: var(--route2); stroke-dasharray: 10 10; opacity: .42; }
+    .arrow { fill: var(--route); opacity: .5; }
+    .player circle { stroke: #111; stroke-width: 2.4; }
+    .player text { fill: #111; font-size: 14px; font-weight: 900; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .forward circle { fill: var(--forward); }
+    .back circle { fill: var(--back); }
+    .enemy { fill: #111; }
+    .ball { fill: var(--ball); stroke: #ffe7bd; stroke-width: 3; }
+    .ruck { fill: rgba(255,255,255,.1); stroke: rgba(255,255,255,.85); stroke-width: 3; }
+    .ruck.preview { fill: rgba(0,0,0,.04); stroke: rgba(0,0,0,.24); }
+    .small-label { fill: rgba(0,0,0,.58); font-size: 16px; font-weight: 900; }
+    .field-label { fill: rgba(255,255,255,.45); font-size: 20px; font-weight: 900; }
+
     @media (max-width: 900px) {
-      body { overflow: auto; }
-      .app { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
+      .app { grid-template-columns: 1fr; }
       aside { grid-template-rows: auto; }
-      main { height: 72vh; padding: 12px; }
+      main { padding: 12px; }
       .bottom { grid-template-columns: 1fr 1fr; }
-      .bottom input, .pill { grid-column: 1 / -1; }
+      .bottom input, .bottom label, .time { grid-column: 1 / -1; }
     }
   </style>
 </head>
@@ -228,28 +252,29 @@
     <aside>
       <div>
         <h1>Jugadas Rugby 15</h1>
-        <p class="sub">Preview limpio. Animacion sin flechas.</p>
+        <p class="hint">Vista limpia. Sin pasos. Sin flechas en animacion.</p>
       </div>
 
-      <div class="stack" id="playButtons"></div>
+      <div class="stack" id="plays"></div>
 
-      <div class="mode">
-        <button id="previewBtn" type="button" aria-pressed="true">Preview</button>
-        <button id="simBtn" type="button" aria-pressed="false">Animacion</button>
+      <div class="row">
+        <button id="preview" type="button" aria-pressed="true">Preview</button>
+        <button id="animation" type="button" aria-pressed="false">Animacion</button>
       </div>
 
       <div class="stack">
-        <button id="editBallBtn" type="button" aria-pressed="false">Mover pelota</button>
-        <label>X pelota <input id="ballX" type="range" min="0" max="1000" value="500"></label>
-        <label>Y pelota <input id="ballY" type="range" min="0" max="620" value="310"></label>
-        <button id="resetBallBtn" type="button">Reset</button>
+        <button id="editBall" type="button" aria-pressed="false">Mover pelota</button>
+        <label>X pelota <input id="ballX" type="range" min="70" max="930" value="850"></label>
+        <label>Y pelota <input id="ballY" type="range" min="80" max="540" value="160"></label>
+        <button id="resetBall" type="button">Reset pelota</button>
       </div>
 
       <div class="legend">
-        <div class="key"><span class="tri"></span><span>Jugador</span></div>
-        <div class="key"><span class="ball-mark"></span><span>Pelota</span></div>
-        <div class="key"><span class="enemy-mark"></span><span>Defensa</span></div>
-        <div class="key"><span class="route-mark"></span><span>Ruta solo preview</span></div>
+        <div class="key"><span class="dot forward"></span><span>Forward</span></div>
+        <div class="key"><span class="dot"></span><span>Back</span></div>
+        <div class="key"><span class="dot enemy"></span><span>Defensa</span></div>
+        <div class="key"><span class="ball-icon"></span><span>Pelota</span></div>
+        <div class="key"><span class="line-icon"></span><span>Ruta solo preview</span></div>
       </div>
     </aside>
 
@@ -257,461 +282,375 @@
       <section class="top">
         <div>
           <h2 id="title"></h2>
-          <p class="sub" id="desc"></p>
+          <p class="hint" id="desc"></p>
         </div>
-        <div class="status" id="status">Preview</div>
+        <div class="state" id="state">Preview</div>
       </section>
 
-      <section class="stage">
-        <canvas id="board"></canvas>
+      <section class="board-wrap">
+        <div class="board-shell">
+          <svg id="board" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
       </section>
 
       <section class="bottom">
-        <button id="playPauseBtn" type="button">Play</button>
-        <button id="restartBtn" type="button">Reiniciar</button>
-        <input id="timeRange" type="range" min="0" max="1000" value="0">
-        <label>Velocidad <input id="speedRange" type="range" min="0.5" max="1.8" value="1" step="0.1"></label>
-        <span class="pill" id="clock">0.0s</span>
+        <button id="play" type="button">Play</button>
+        <button id="restart" type="button">Reiniciar</button>
+        <input id="scrub" type="range" min="0" max="1000" value="0">
+        <label>Velocidad <input id="speed" type="range" min="0.6" max="1.6" step="0.1" value="1"></label>
+        <span class="time" id="clock">0.0s</span>
       </section>
     </main>
   </div>
 
   <script>
-    const W = 1000;
-    const H = 620;
-
     const plays = {
       casita: {
         name: 'Casita',
-        desc: 'Line derecha. Celdas cortas. Vuelta izquierda. Cierre al 14.',
-        duration: 15000,
-        startBall: [855, 330],
-        route: [
-          [855,300],[760,305],[655,330],[545,355],[430,380],[305,405],[185,430],
-          [300,470],[430,465],[560,455],[700,440],[830,415],[930,390]
+        desc: 'Line derecha. Primer contacto. Vuelta izquierda. Cierre largo al 14.',
+        duration: 15,
+        start: [850, 160],
+        ball: [
+          [850,160], [800,250], [710,292], [630,292], [565,292], [520,292],
+          [468,332], [392,355], [315,375], [240,400], [190,415],
+          [300,468], [405,462], [520,452], [635,438], [750,415], [865,386], [930,370]
         ],
-        attack: {
-          9:[[850,385],[760,350],[650,372],[520,392],[310,405],[360,365],[495,365],[620,365],[730,370]],
-          10:[[760,350],[650,372],[525,392],[405,395],[350,365],[470,365],[585,365],[700,370]],
-          8:[[705,315],[665,350],[620,370],[520,370],[440,360],[515,345],[590,350],[640,350]],
-          7:[[720,290],[670,350],[610,385],[530,360],[450,350],[520,335],[600,340],[660,350]],
-          11:[[655,405],[585,405],[450,410],[300,410],[195,420],[300,375],[430,360],[560,365],[690,375]],
-          12:[[600,430],[520,425],[410,415],[300,400],[210,425],[330,370],[470,355],[620,360],[755,365]],
-          13:[[555,455],[480,450],[380,430],[270,405],[190,420],[315,380],[455,365],[610,360],[790,365]],
-          14:[[910,390],[900,390],[865,388],[830,385],[780,380],[760,378],[790,370],[850,365],[930,360]],
-          15:[[625,455],[545,445],[435,430],[320,410],[230,425],[350,385],[500,365],[655,365],[820,370]]
+        players: {
+          1:[790,190], 2:[850,160], 3:[820,210], 4:[755,222], 6:[715,258],
+          7:[610,275], 8:[560,292], 9:[690,338], 10:[615,326],
+          11:[320,422], 12:[392,386], 13:[235,402], 14:[865,386], 15:[305,378]
         },
-        defense: [[610,315],[520,330],[430,345],[340,365],[260,395],[470,310],[610,330],[740,345],[855,365]],
-        rucks: [[610,370,3900],[185,420,7500],[420,345,10100]],
-        label: 'CASITA'
+        moving: {
+          9:[[682,330],[520,325],[190,438],[405,480]],
+          10:[[615,326],[465,335],[300,468],[520,452]],
+          14:[[865,386],[930,370]]
+        },
+        enemies: [[535,250],[450,290],[360,335],[275,385],[635,350],[735,365],[830,385]],
+        rucks: [[520,292],[190,415],[405,462]],
+        fake: []
       },
       j25: {
         name: 'Jugada 25',
-        desc: 'Scrum. 12 directo. 15 entra. Escalera final al 11.',
-        duration: 14500,
-        startBall: [555,385],
-        route: [
-          [555,385],[470,400],[335,380],[265,360],
-          [345,330],[430,335],[515,345],[595,355],[705,370],
-          [560,440],[430,445],[350,438],[290,428],[230,418],[170,405],[65,385]
+        desc: 'Scrum. 12 al contacto. 15 entre 13 y 14. Escalera final al 11.',
+        duration: 14,
+        start: [555,330],
+        ball: [
+          [555,330], [505,350], [410,350], [325,340], [275,340],
+          [360,300], [455,305], [548,315], [642,330], [745,350],
+          [680,448], [585,470], [492,482], [400,477], [305,462], [205,438], [100,415], [60,410]
         ],
-        attack: {
-          9:[[500,405],[470,400],[300,405],[265,405],[330,395],[560,410],[500,420],[430,415],[350,410]],
-          10:[[405,390],[400,390],[380,388],[355,385],[390,390],[500,400],[425,395],[350,390],[275,390]],
-          12:[[335,380],[320,372],[285,362],[265,360],[360,382],[430,380],[500,385],[560,395],[610,400]],
-          13:[[275,395],[295,392],[320,388],[345,385],[430,390],[515,390],[575,398],[640,402],[700,405]],
-          15:[[220,420],[285,410],[360,405],[460,400],[545,405],[595,405],[640,390],[690,375],[720,370]],
-          14:[[145,385],[240,390],[345,392],[470,390],[595,385],[670,385],[705,370],[730,365],[740,360]],
-          3:[[585,265],[580,310],[575,350],[560,380],[500,380],[430,390],[350,382],[280,390],[210,395]],
-          2:[[545,260],[548,320],[548,360],[545,385],[450,390],[360,395],[290,398],[220,402],[150,398]],
-          1:[[510,260],[515,320],[520,365],[535,405],[470,410],[350,410],[230,410],[155,400],[90,390]],
-          5:[[565,310],[570,350],[590,390],[610,445],[520,425],[380,410],[250,405],[170,400],[75,388]],
-          11:[[170,430],[175,425],[178,420],[180,415],[170,410],[150,405],[120,398],[90,390],[55,385]]
+        players: {
+          1:[305,462], 2:[400,477], 3:[492,482], 4:[565,420], 5:[205,438],
+          7:[292,300], 8:[555,330], 9:[505,350], 10:[585,470],
+          11:[100,415], 12:[325,340], 13:[548,300], 14:[750,352], 15:[642,330]
         },
-        defense: [[300,325],[250,365],[305,430],[410,345],[500,355],[610,370],[690,390],[340,350],[215,390],[120,410]],
-        rucks: [[265,360,3600],[705,370,7000],[500,380,9800]],
-        label: '25'
+        moving: {
+          9:[[505,350],[275,380],[745,390],[680,448]],
+          12:[[325,340],[275,340]],
+          14:[[745,350],[775,345]],
+          11:[[100,415],[60,410]]
+        },
+        enemies: [[300,292],[245,340],[330,390],[470,270],[560,292],[660,325],[750,382],[390,430],[185,410]],
+        rucks: [[275,340],[745,350],[680,448]],
+        fake: []
       },
       j27: {
         name: 'Jugada 27',
-        desc: 'Scrum izquierda. Finta. Cambio al lado de entrada. 11 final.',
-        duration: 13500,
-        startBall: [545,390],
-        route: [
-          [545,390],[500,405],[350,375],[285,370],
-          [250,330],[220,330],[285,410],
-          [430,455],[510,455],[590,450],[665,445],[790,435],[870,430],[950,430]
+        desc: 'Scrum a izquierda. Finta corta. Cambio al lado de entrada. 11 final.',
+        duration: 13,
+        start: [550,335],
+        ball: [
+          [550,335], [505,350], [410,330], [315,320], [275,320],
+          [332,414], [430,458], [525,458], [620,450], [715,438], [805,426], [890,405], [950,392]
         ],
-        attack: {
-          9:[[505,405],[500,405],[370,390],[285,410],[260,405],[285,410],[390,400],[510,405],[650,420]],
-          12:[[350,375],[340,372],[305,370],[285,370],[280,375],[300,385],[360,390],[420,395],[480,400]],
-          13:[[310,405],[295,400],[260,392],[220,385],[190,380],[230,390],[330,400],[440,405],[560,410]],
-          7:[[455,360],[400,355],[320,350],[235,350],[205,350],[245,365],[350,375],[470,385],[590,395]],
-          8:[[545,390],[520,392],[430,405],[310,425],[235,425],[285,420],[420,410],[560,410],[700,415]],
-          1:[[625,375],[610,378],[580,382],[540,386],[500,390],[430,390],[480,398],[590,405],[700,410]],
-          2:[[675,390],[665,392],[635,395],[600,398],[560,402],[510,405],[575,402],[665,405],[760,410]],
-          4:[[690,340],[675,350],[650,365],[620,382],[600,390],[590,395],[650,398],[725,405],[790,410]],
-          5:[[720,360],[705,370],[680,385],[660,400],[650,405],[665,410],[720,412],[785,415],[845,425]],
-          3:[[740,405],[730,405],[715,405],[700,407],[690,408],[745,405],[790,410],[825,420],[860,430]],
-          11:[[830,430],[825,430],[820,430],[815,430],[810,430],[830,430],[870,430],[920,430],[950,430]]
+        players: {
+          1:[430,458], 2:[525,458], 3:[805,426], 4:[620,450], 5:[715,438],
+          7:[215,292], 8:[335,370], 9:[505,350], 10:[425,345],
+          11:[890,405], 12:[315,320], 13:[250,330], 14:[190,372], 15:[270,455]
         },
-        defense: [[315,335],[280,365],[250,405],[205,385],[475,350],[555,360],[635,375],[715,395],[820,415],[900,450]],
-        rucks: [[285,370,3500],[790,410,10300]],
-        label: '27'
+        moving: {
+          9:[[505,350],[275,390],[360,430]],
+          12:[[315,320],[275,320]],
+          13:[[250,330],[185,300]],
+          11:[[890,405],[950,392]]
+        },
+        enemies: [[300,270],[260,320],[225,365],[460,315],[555,335],[650,355],[750,385],[850,410],[930,425]],
+        rucks: [[275,320],[805,426]],
+        fake: [[275,390],[230,335],[180,300]]
       }
     };
 
-    const canvas = document.getElementById('board');
-    const ctx = canvas.getContext('2d');
-    const playButtons = document.getElementById('playButtons');
+    const forwards = new Set(['1','2','3','4','5','6','7','8']);
+    const board = document.getElementById('board');
+    const playList = document.getElementById('plays');
     const title = document.getElementById('title');
     const desc = document.getElementById('desc');
-    const statusText = document.getElementById('status');
-    const previewBtn = document.getElementById('previewBtn');
-    const simBtn = document.getElementById('simBtn');
-    const playPauseBtn = document.getElementById('playPauseBtn');
-    const restartBtn = document.getElementById('restartBtn');
-    const timeRange = document.getElementById('timeRange');
-    const speedRange = document.getElementById('speedRange');
+    const state = document.getElementById('state');
+    const previewBtn = document.getElementById('preview');
+    const animationBtn = document.getElementById('animation');
+    const playBtn = document.getElementById('play');
+    const restartBtn = document.getElementById('restart');
+    const scrub = document.getElementById('scrub');
+    const speed = document.getElementById('speed');
     const clock = document.getElementById('clock');
-    const editBallBtn = document.getElementById('editBallBtn');
-    const resetBallBtn = document.getElementById('resetBallBtn');
+    const editBallBtn = document.getElementById('editBall');
+    const resetBallBtn = document.getElementById('resetBall');
     const ballX = document.getElementById('ballX');
     const ballY = document.getElementById('ballY');
 
     let current = 'casita';
     let mode = 'preview';
     let playing = false;
-    let editBall = false;
-    let t = 0;
-    let last = 0;
+    let time = 0;
+    let previous = 0;
+    let editing = false;
     let dragging = false;
-    const customStart = {};
+    const customStarts = {};
 
-    function resize() {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.round(rect.width * dpr);
-      canvas.height = Math.round(rect.height * dpr);
-      ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0);
-      draw();
+    Object.entries(plays).forEach(([id, play]) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'play-btn';
+      button.textContent = play.name;
+      button.addEventListener('click', () => {
+        current = id;
+        time = 0;
+        playing = false;
+        render();
+      });
+      playList.appendChild(button);
+    });
+
+    function activePlay() {
+      return plays[current];
     }
 
-    function point(path, p) {
-      if (p <= 0) return path[0];
-      if (p >= 1) return path[path.length - 1];
-      const total = path.length - 1;
-      const f = p * total;
-      const i = Math.floor(f);
-      const k = f - i;
-      return lerp(path[i], path[i + 1], k);
+    function startPoint(play) {
+      return customStarts[current] || play.start;
+    }
+
+    function route(play) {
+      return [startPoint(play), ...play.ball.slice(1)];
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
     }
 
     function lerp(a, b, k) {
       return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
     }
 
-    function smooth(k) {
+    function ease(k) {
       return k * k * (3 - 2 * k);
     }
 
-    function playerPos(track, p) {
-      return point(track, smooth(p));
+    function pointOn(points, progress) {
+      if (progress <= 0) return points[0];
+      if (progress >= 1) return points[points.length - 1];
+      const scaled = progress * (points.length - 1);
+      const index = Math.floor(scaled);
+      return lerp(points[index], points[index + 1], scaled - index);
     }
 
-    function ballStart(play) {
-      return customStart[current] || play.startBall;
+    function playerPoint(number, base, progress) {
+      const path = activePlay().moving[number];
+      if (!path) return base;
+      return pointOn(path, ease(progress));
     }
 
-    function ballPath(play) {
-      return [ballStart(play), ...play.route.slice(1)];
-    }
-
-    function ballPos(play, p) {
-      return point(ballPath(play), smooth(p));
-    }
-
-    function drawField() {
-      ctx.fillStyle = mode === 'preview' ? '#f7f3e8' : '#2f7f4c';
-      ctx.fillRect(0, 0, W, H);
-
-      if (mode === 'preview') {
-        ctx.strokeStyle = 'rgba(0,0,0,.08)';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(28, 28, W - 56, H - 56);
-        return;
+    function pathData(points, curved = true) {
+      if (!curved || points.length < 3) return `M ${points.map(p => p.join(' ')).join(' L ')}`;
+      let d = `M ${points[0][0]} ${points[0][1]}`;
+      for (let i = 1; i < points.length - 1; i++) {
+        const mid = [(points[i][0] + points[i + 1][0]) / 2, (points[i][1] + points[i + 1][1]) / 2];
+        d += ` Q ${points[i][0]} ${points[i][1]} ${mid[0]} ${mid[1]}`;
       }
-
-      ctx.strokeStyle = 'rgba(255,255,255,.72)';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(35, 35, 930, 550);
-      line(105, 35, 105, 585);
-      line(895, 35, 895, 585);
-      line(500, 35, 500, 585);
-      ctx.setLineDash([14, 12]);
-      line(250, 35, 250, 585);
-      line(750, 35, 750, 585);
-      ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(255,255,255,.45)';
-      ctx.font = '900 16px Arial';
-      ctx.fillText('TRY', 55, 315);
-      ctx.fillText('TRY', 910, 315);
+      const last = points[points.length - 1];
+      d += ` T ${last[0]} ${last[1]}`;
+      return d;
     }
 
-    function line(x1, y1, x2, y2) {
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
+    function arrowFor(a, b) {
+      const angle = Math.atan2(b[1] - a[1], b[0] - a[0]);
+      const size = 12;
+      const p1 = [b[0] - size * Math.cos(angle - .45), b[1] - size * Math.sin(angle - .45)];
+      const p2 = [b[0] - size * Math.cos(angle + .45), b[1] - size * Math.sin(angle + .45)];
+      return `${b[0]},${b[1]} ${p1[0]},${p1[1]} ${p2[0]},${p2[1]}`;
     }
 
-    function drawRoute(play) {
-      if (mode !== 'preview') return;
-      const route = ballPath(play);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = 'rgba(0,0,0,.14)';
-      ctx.lineWidth = 4;
+    function player(number, point) {
+      const type = forwards.has(number) ? 'forward' : 'back';
+      return `<g class="player ${type}" transform="translate(${point[0]} ${point[1]})">
+        <circle r="18"></circle>
+        <text>${number}</text>
+      </g>`;
+    }
 
-      for (let i = 1; i < route.length; i += 2) {
-        const a = route[i - 1];
-        const b = route[i];
-        ctx.beginPath();
-        ctx.moveTo(a[0], a[1]);
-        const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 - 12];
-        ctx.quadraticCurveTo(mid[0], mid[1], b[0], b[1]);
-        ctx.stroke();
-        arrow(a, b, 'rgba(0,0,0,.32)');
+    function ball(point) {
+      return `<g transform="translate(${point[0]} ${point[1]}) rotate(-18)">
+        <ellipse class="ball" rx="15" ry="9"></ellipse>
+      </g>`;
+    }
+
+    function ruck(point, preview) {
+      const cls = preview ? 'ruck preview' : 'ruck';
+      return `<path class="${cls}" d="M ${point[0] - 24} ${point[1]}
+        L ${point[0] - 12} ${point[1] - 18}
+        L ${point[0] + 5} ${point[1] - 24}
+        L ${point[0] + 20} ${point[1] - 12}
+        L ${point[0] + 26} ${point[1] + 6}
+        L ${point[0] + 8} ${point[1] + 22}
+        L ${point[0] - 13} ${point[1] + 18} Z"></path>`;
+    }
+
+    function field(preview) {
+      if (preview) {
+        return `<rect class="paper-bg" width="1000" height="620"></rect>
+          <rect x="40" y="40" width="920" height="540" fill="none" stroke="rgba(0,0,0,.1)" stroke-width="2"></rect>
+          <text class="small-label" x="62" y="72">Preview tactico</text>`;
       }
+      return `<rect class="field-bg" width="1000" height="620"></rect>
+        <rect class="stripe" x="105" y="35" width="145" height="550"></rect>
+        <rect class="stripe" x="500" y="35" width="250" height="550"></rect>
+        <g class="field-line">
+          <rect x="35" y="35" width="930" height="550"></rect>
+          <line x1="105" y1="35" x2="105" y2="585"></line>
+          <line x1="895" y1="35" x2="895" y2="585"></line>
+          <line x1="500" y1="35" x2="500" y2="585"></line>
+          <line class="dash" x1="250" y1="35" x2="250" y2="585"></line>
+          <line class="dash" x1="750" y1="35" x2="750" y2="585"></line>
+        </g>
+        <text class="field-label" x="72" y="315">TRY</text>
+        <text class="field-label" x="905" y="315">TRY</text>`;
     }
 
-    function arrow(a, b, color) {
-      const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
-      const x = b[0];
-      const y = b[1];
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x - 18 * Math.cos(ang - .45), y - 18 * Math.sin(ang - .45));
-      ctx.lineTo(x - 18 * Math.cos(ang + .45), y - 18 * Math.sin(ang + .45));
-      ctx.closePath();
-      ctx.fill();
-    }
+    function render() {
+      const play = activePlay();
+      const progress = play.duration ? time / play.duration : 0;
+      const preview = mode === 'preview';
+      const actualRoute = route(play);
+      let html = field(preview);
 
-    function drawRucks(play, p) {
-      for (const [x, y, ms] of play.rucks) {
-        const rp = Math.abs((p * play.duration) - ms);
-        if (mode === 'preview' || rp < 1300) {
-          ctx.strokeStyle = mode === 'preview' ? 'rgba(0,0,0,.22)' : 'rgba(255,255,255,.75)';
-          ctx.fillStyle = mode === 'preview' ? 'rgba(0,0,0,.05)' : 'rgba(255,255,255,.13)';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          for (let i = 0; i < 18; i++) {
-            const a = i / 18 * Math.PI * 2;
-            const r = 22 + (i % 2) * 8;
-            const px = x + Math.cos(a) * r;
-            const py = y + Math.sin(a) * r;
-            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-          }
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
+      if (preview) {
+        html += `<path class="route" d="${pathData(actualRoute)}"></path>`;
+        for (let i = 1; i < actualRoute.length; i += 3) {
+          html += `<polygon class="arrow" points="${arrowFor(actualRoute[i - 1], actualRoute[i])}"></polygon>`;
         }
+        if (play.fake.length) html += `<path class="route secondary" d="${pathData(play.fake, false)}"></path>`;
       }
-    }
 
-    function drawDefenders(play) {
-      for (const [x, y] of play.defense) {
-        ctx.fillStyle = '#111';
-        ctx.beginPath();
-        ctx.ellipse(x, y, 9, 11, -.45, 0, Math.PI * 2);
-        ctx.fill();
+      for (const enemy of play.enemies) html += `<circle class="enemy" cx="${enemy[0]}" cy="${enemy[1]}" r="10"></circle>`;
+      for (const item of play.rucks) {
+        if (preview || distance(pointOn(actualRoute, progress), item) < 80) html += ruck(item, preview);
       }
-    }
 
-    function drawPlayers(play, p) {
-      Object.entries(play.attack).forEach(([num, track]) => {
-        const [x, y] = mode === 'preview' ? track[Math.min(track.length - 1, Math.floor(track.length * .55))] : playerPos(track, p);
-        player(x, y, num, Number(num) <= 8);
+      Object.entries(play.players).forEach(([number, base]) => {
+        const point = preview ? base : playerPoint(number, base, progress);
+        html += player(number, point);
       });
-    }
 
-    function player(x, y, num, forward) {
-      const color = forward ? '#ffdca7' : '#8fc7ff';
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.fillStyle = color;
-      ctx.strokeStyle = '#111';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(18, 0);
-      ctx.lineTo(-12, -14);
-      ctx.lineTo(-8, 0);
-      ctx.lineTo(-12, 14);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#111';
-      ctx.font = '900 13px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(num, -1, 1);
-      ctx.restore();
-    }
+      html += ball(preview ? startPoint(play) : pointOn(actualRoute, ease(progress)));
+      board.innerHTML = html;
 
-    function drawBall(play, p) {
-      const [x, y] = mode === 'preview' ? ballStart(play) : ballPos(play, p);
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(-.4);
-      ctx.fillStyle = '#b85d2d';
-      ctx.strokeStyle = editBall ? '#fff' : '#f7e7c3';
-      ctx.lineWidth = editBall ? 5 : 3;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 14, 8, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function drawLegendText(play) {
-      if (mode !== 'preview') return;
-      ctx.fillStyle = 'rgba(0,0,0,.72)';
-      ctx.font = '900 24px Arial';
-      ctx.fillText(play.label, 820, 62);
-      ctx.font = '800 16px Arial';
-      ctx.fillText('Preview esquematico', 55, 60);
-    }
-
-    function draw() {
-      const play = plays[current];
-      const p = t / play.duration;
-      drawField();
-      drawRoute(play);
-      drawDefenders(play);
-      drawRucks(play, p);
-      drawPlayers(play, p);
-      drawBall(play, p);
-      drawLegendText(play);
       title.textContent = play.name;
       desc.textContent = play.desc;
-      statusText.textContent = mode === 'preview' ? 'Preview' : playing ? 'Animando' : 'Animacion pausada';
-      previewBtn.setAttribute('aria-pressed', String(mode === 'preview'));
-      simBtn.setAttribute('aria-pressed', String(mode === 'sim'));
-      editBallBtn.setAttribute('aria-pressed', String(editBall));
-      playPauseBtn.textContent = playing ? 'Pausa' : 'Play';
-      timeRange.value = Math.round(p * 1000);
-      clock.textContent = `${(t / 1000).toFixed(1)}s`;
-      const b = ballStart(play);
-      ballX.value = Math.round(b[0]);
-      ballY.value = Math.round(b[1]);
-      [...playButtons.children].forEach((b, i) => b.classList.toggle('active', Object.keys(plays)[i] === current));
+      state.textContent = preview ? 'Preview' : playing ? 'Animando' : 'Animacion pausada';
+      previewBtn.setAttribute('aria-pressed', String(preview));
+      animationBtn.setAttribute('aria-pressed', String(!preview));
+      editBallBtn.setAttribute('aria-pressed', String(editing));
+      playBtn.textContent = playing ? 'Pausa' : 'Play';
+      scrub.value = Math.round(progress * 1000);
+      clock.textContent = `${time.toFixed(1)}s`;
+      ballX.value = Math.round(startPoint(play)[0]);
+      ballY.value = Math.round(startPoint(play)[1]);
+      [...playList.children].forEach((button, index) => button.classList.toggle('active', Object.keys(plays)[index] === current));
     }
 
-    function loop(now) {
-      if (!last) last = now;
-      const dt = now - last;
-      last = now;
-      if (playing && mode === 'sim') {
-        t += dt * Number(speedRange.value);
-        if (t > plays[current].duration) t = 0;
-        draw();
+    function distance(a, b) {
+      return Math.hypot(a[0] - b[0], a[1] - b[1]);
+    }
+
+    function tick(now) {
+      if (!previous) previous = now;
+      const dt = (now - previous) / 1000;
+      previous = now;
+      if (playing && mode === 'animation') {
+        time += dt * Number(speed.value);
+        if (time >= activePlay().duration) {
+          time = activePlay().duration;
+          playing = false;
+        }
+        render();
       }
-      requestAnimationFrame(loop);
+      requestAnimationFrame(tick);
     }
 
     function setMode(next) {
       mode = next;
       if (mode === 'preview') playing = false;
-      draw();
+      render();
     }
 
-    function canvasPoint(event) {
-      const r = canvas.getBoundingClientRect();
-      return [(event.clientX - r.left) / r.width * W, (event.clientY - r.top) / r.height * H];
+    function svgPoint(event) {
+      const pt = board.createSVGPoint();
+      pt.x = event.clientX;
+      pt.y = event.clientY;
+      return pt.matrixTransform(board.getScreenCTM().inverse());
     }
-
-    Object.entries(plays).forEach(([id, play]) => {
-      const btn = document.createElement('button');
-      btn.className = 'play-btn';
-      btn.type = 'button';
-      btn.textContent = play.name;
-      btn.addEventListener('click', () => {
-        current = id;
-        t = 0;
-        playing = false;
-        draw();
-      });
-      playButtons.appendChild(btn);
-    });
 
     previewBtn.addEventListener('click', () => setMode('preview'));
-    simBtn.addEventListener('click', () => setMode('sim'));
-
-    playPauseBtn.addEventListener('click', () => {
-      mode = 'sim';
+    animationBtn.addEventListener('click', () => setMode('animation'));
+    playBtn.addEventListener('click', () => {
+      mode = 'animation';
+      if (time >= activePlay().duration) time = 0;
       playing = !playing;
-      draw();
+      render();
     });
-
     restartBtn.addEventListener('click', () => {
-      t = 0;
+      time = 0;
       playing = false;
-      draw();
+      render();
     });
-
-    timeRange.addEventListener('input', () => {
-      mode = 'sim';
+    scrub.addEventListener('input', () => {
+      mode = 'animation';
       playing = false;
-      t = Number(timeRange.value) / 1000 * plays[current].duration;
-      draw();
+      time = Number(scrub.value) / 1000 * activePlay().duration;
+      render();
     });
-
     editBallBtn.addEventListener('click', () => {
-      editBall = !editBall;
+      editing = !editing;
+      mode = 'preview';
       playing = false;
-      setMode('preview');
+      render();
     });
-
     resetBallBtn.addEventListener('click', () => {
-      delete customStart[current];
-      draw();
+      delete customStarts[current];
+      render();
     });
-
     ballX.addEventListener('input', () => {
-      customStart[current] = [Number(ballX.value), Number(ballY.value)];
-      draw();
+      customStarts[current] = [Number(ballX.value), Number(ballY.value)];
+      render();
     });
-
     ballY.addEventListener('input', () => {
-      customStart[current] = [Number(ballX.value), Number(ballY.value)];
-      draw();
+      customStarts[current] = [Number(ballX.value), Number(ballY.value)];
+      render();
     });
-
-    canvas.addEventListener('pointerdown', event => {
-      if (!editBall || mode !== 'preview') return;
-      const [x, y] = canvasPoint(event);
-      const b = ballStart(plays[current]);
-      if (Math.hypot(x - b[0], y - b[1]) < 34) {
-        dragging = true;
-        canvas.classList.add('editing');
-      }
+    board.addEventListener('pointerdown', event => {
+      if (!editing || mode !== 'preview') return;
+      const p = svgPoint(event);
+      if (distance([p.x, p.y], startPoint(activePlay())) < 36) dragging = true;
     });
-
-    canvas.addEventListener('pointermove', event => {
+    board.addEventListener('pointermove', event => {
       if (!dragging) return;
-      customStart[current] = canvasPoint(event);
-      draw();
+      const p = svgPoint(event);
+      customStarts[current] = [clamp(p.x, 70, 930), clamp(p.y, 80, 540)];
+      render();
     });
+    window.addEventListener('pointerup', () => dragging = false);
 
-    window.addEventListener('pointerup', () => {
-      dragging = false;
-      canvas.classList.remove('editing');
-    });
-
-    window.addEventListener('resize', resize);
-    resize();
-    requestAnimationFrame(loop);
+    render();
+    requestAnimationFrame(tick);
   </script>
 </body>
 </html>
